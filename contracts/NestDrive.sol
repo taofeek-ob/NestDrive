@@ -1,6 +1,6 @@
 //SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.10;
 import "@openzeppelin/contracts/utils/Counters.sol";
 
 
@@ -8,6 +8,8 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 /// @title A Decentralized file storage Dapp
 contract NestDrive {
     constructor() {
+
+        /// @notice Make contract deployer a moderator 
         mods[msg.sender] = true;
     }
 
@@ -22,15 +24,14 @@ contract NestDrive {
     Counters.Counter private _itemsPrivate;
 
     /// @notice stores the list of moderators
-    /// @dev mapping outlining addresses of assigned moderators
+    /// @dev mapping to check if an address is an assigned moderator. Returns True or False
     mapping(address => bool) public mods;
 
     /// @notice stores the list of files
-    /// @dev mapping outlining all files created
+    /// @dev mapping outlining all files created in a state variable `Allfiles`
     mapping(uint => File) public Allfiles;
 
-    /// @notice emits a notice when a new file is uploaded
-    /// @dev emit an event containing all the file details when file is uploaded
+    /// @notice Emit an event containing all the file details when a file is uploaded
     event FileUploaded(
         uint fileId,
         string fileHash,
@@ -43,15 +44,14 @@ contract NestDrive {
         bool isPublic
     );
 
-    /// @notice Notification when a moderator is assigned
-    /// @dev Emit event when a new moderator is assigned
+    /// @notice Emit event when a new moderator is assigned
     event AssignMod(address adder, address newMod);
 
-    /// @notice Notification when a moderator is removed
-    /// @dev Emit event when a moderator is removed
+    /// @notice Emit event when a moderator is removed
     event RemoveMod(address remover, address newMod);
 
-    /// @dev modifier to ensure only moderators can call selected functions.
+    /// @notice Ensure that only a moderator can call a specific function.
+    /// @dev Modifier to check that address is an assigned moderator.
     modifier isMod(address _user) {
         bool ismod = mods[_user];
         require(ismod, "Only Moderators Have Access!");
@@ -70,7 +70,6 @@ contract NestDrive {
         address uploader;
         bool isPublic;
     }
-
 
     /// @notice Function to upload a file
     function uploadFile(
@@ -117,6 +116,7 @@ contract NestDrive {
         );
 
         /// @notice Trigger an event when file is uploaded
+        /// @param FileUploaded Name of emitted event
         emit FileUploaded(
             currentfileId,
             _fileHash,
@@ -130,33 +130,40 @@ contract NestDrive {
         );
     }
 
-    /// @notice add a new moderator
+    /// @notice Add a new moderator
+    /// @dev Ensure that only an exisiting moderator can assign new moderators
     function assignMod(address _newMod) public isMod(msg.sender) {
         mods[_newMod] = true;
         
         /// @notice Emit event when a new moderator has been added
+        /// @dev Emits address of user adding the new moderator and address of moderator that was added
+        /// @param AssignMod Name of emitted event
         emit AssignMod(msg.sender, _newMod );
     }
 
-    /// @notice remove an existing moderator
+    /// @notice Remove an existing moderator
+    /// @dev Ensure that only an exisiting moderator can remove a moderator
     function removeMod(address _mod) public isMod(msg.sender) {
         require(mods[_mod], "Address is not a moderator.");
         mods[_mod] = false;
         
-        /// Emit event when a moderator has been removed
+        /// @notice Emit event when a moderator has been removed
+        /// @dev Emits address of user removing the moderator and address of moderator that was removed
+        /// @param RemoveMod Name of emitted event
         emit RemoveMod(msg.sender, _mod );
     }
 
-    /// @dev Only the uploader can change file visibility
+    /// @notice Only the uploader can change if a file is publicly accessible
+    /// @dev Uploader has the ability to switch file visibility from public to private
     function makeFilePrivate(uint fileId) public {
 
-        /// @notice ensure that the uploader can change file visibility
+        /// @dev Ensure that only the uploader of a file can change it's visibility
         require(
             Allfiles[fileId].uploader == msg.sender,
             "you can only manipulate your own file"
         );
 
-        /// @notice check that file is not public
+        /// @dev Check that file is not public
         Allfiles[fileId].isPublic = false;
 
         /// @dev increase count of private files
@@ -166,7 +173,7 @@ contract NestDrive {
     /// @notice Function to retrieve all public files
     function fetchPublicFiles() public view returns (File[] memory) {
         
-        /// @notice total number of items ever created
+        /// @dev total files ever uploaded
         uint totalFiles = _itemIds.current();
 
         uint publicFilesID = _itemIds.current() - _itemsPrivate.current();
@@ -174,10 +181,13 @@ contract NestDrive {
 
         File[] memory items = new File[](publicFilesID);
 
-        /// @notice Loop through all items ever created
-        for (uint i = 0; i < totalFiles; i++) {
+        /// @notice Loop through all files ever uploaded
+        for (
+            uint i = 0;
+            i < totalFiles;
+            i++) {
             
-            /// @notice Get only public item
+            /// @notice Get only public files
             if (Allfiles[i + 1].isPublic == true) {
                 uint currentId = Allfiles[i + 1].fileId;
                 File storage currentItem = Allfiles[currentId];
@@ -185,24 +195,33 @@ contract NestDrive {
                 currentIndex += 1;
             }
         }
-
         return items;
     }
 
-    // fetch only files uploaded by the user
+    /// @notice Function to fetch only files uploaded by the current user
     function fetchUserFiles() public view returns (File[] memory) {
         uint totalFiles = _itemIds.current();
         uint itemCount = 0;
         uint currentIndex = 0;
 
-        for (uint i = 0; i < totalFiles; i++) {
+        /// @dev Loop through all files and extract files uploaded by the current user, save as new struct and increment item count
+        for (
+            uint i = 0;
+            i < totalFiles;
+            i++) {
             if (Allfiles[i + 1].uploader == msg.sender) {
                 itemCount += 1;
             }
         }
 
         File[] memory items = new File[](itemCount);
-        for (uint i = 0; i < totalFiles; i++) {
+
+        for (
+            uint i = 0;
+            i < totalFiles;
+            i++) {
+
+            /// @dev Get only current user files
             if (Allfiles[i + 1].uploader == msg.sender) {
                 uint currentId = Allfiles[i + 1].fileId;
                 File storage currentItem = Allfiles[currentId];

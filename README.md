@@ -61,13 +61,13 @@ These files could be articles, books or similar. The default permission for uplo
 > ## Repo Setup
 
 <p align="justify">
-To setup the repo, first fork the TeamResilient Nestcoin repo, then clone the forked repository to create a copy on the local machine.
+To setup the repo, first fork the TeamResilient NestDrive repo, then clone the forked repository to create a copy on the local machine.
 </p>
 
     $ git clone https://github.com/pauline-banye/NestDrive.git
 
 <p align="justify">
-Change directory to the cloned repo and set the original Nestcoin repository as the "upstream" and your forked repository as the "origin" using gitbash.
+Change directory to the cloned repo and set the original NestDrive repository as the "upstream" and your forked repository as the "origin" using gitbash.
 </p>
 
     $ git remote add upstream https://github.com/TeamResilient/NestDrive.git
@@ -94,7 +94,7 @@ The steps involved are outlined below:-
 > ### Install Hardhat
 The first step involves cloning and installing hardhat.
 ```shell
-$ cd Nestcoin
+$ cd NestDrive
 
 $ npm i -D hardhat
 
@@ -238,12 +238,7 @@ $ npx hardhat test --network localhost
 #
 > ## Verified Contract Addresses
 
-- The NestDrop Contract Address 
-
-  ................
-
-
-- The NestCoin Contract Address
+- The NestDrive Contract Address
 
   .....................
 
