@@ -29,7 +29,7 @@ contract NESTDRIVE {
     struct File {
         uint fileId;
         string fileHash;
-        uint fileSize;
+        string fileSize;
         string fileType;
         string fileName;
         string fileDescription;
@@ -58,7 +58,7 @@ contract NESTDRIVE {
         // Make sure uploader address exists
         require(msg.sender != address(0));
         // Make sure file size is more than 0
-        require(_fileSize > 0);
+        require(bytes(_fileSize).length > 0);
 
         // Increment file id
         _itemIds.increment();
