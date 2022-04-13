@@ -1,70 +1,57 @@
-# Getting Started with Create React App
+<!DOCTYPE html>
+<h1 align="center">Fylo - landing page with React </h1>
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<div align="center">
+  <a href="https://fylo-cloud-landing-page-with-react.netlify.app/" target="_blank">See Live</a>
+</div>
 
-## Available Scripts
+<p align="center">This is a cloud storage landing page build using React with dark theme added.</p>
 
-In the project directory, you can run:
+<!-- badges -->
+<div align="center">
+  <img src="https://api.netlify.com/api/v1/badges/42774aad-2742-4684-8c6f-ca1440a36d94/deploy-status" alt="netlify deploy status">
+  <img style="margin-left: 2rem;" src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="mit license badge">
+</div>
 
-### `npm start`
+<!-- screen shot -->
+<div style="margin: 2rem 0">
+  <img width="100%" src="website.gif" alt="screen shot of website">
+</div>
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Getting Started
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+To get started, you can download a local copy of the repository and or see live <a href="https://fylo-cloud-landing-page-with-react.netlify.app/" target="_blank">here</a>.
 
-### `npm test`
+### Prerequisites
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Before running this project locally, you should have installed node and npm on your PC. <br>
 
-### `npm run build`
+### After installing node and npm,
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Run these commands
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- Install all the dependencies for this project
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+  ```
+  npm install
+  ```
 
-### `npm run eject`
+- Run locally
+  ```
+  npm start
+  ```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+After running these commands, this website should have launched in your default browser.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Built With
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- [React](https://reactjs.org/) - JavaScript library for building user interfaces
+- [Sass](https://sass-lang.com/) - Preprocessor scripting language for CSS
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## License
 
-## Learn More
+This project is licensed under the [MIT License](https://opensource.org/licenses/MIT)
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Acknowledgments
 
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+This project was build by taking challenge on [Frontend Mentor](https://www.frontendmentor.io/profile/ramankarki)
