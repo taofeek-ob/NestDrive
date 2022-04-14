@@ -25,7 +25,7 @@ export default function Hero(props) {
             isdarkThemeActive={props.isdarkThemeActive}
             heading="All your files in one secure location, accessible anywhere"
             paragraph={[
-              "Flyo stores your important files in one secure location. Access them wherever you need, share and collaborate with friends, family and co-workers.",
+              "NestDrive stores your important files in one secure location. Access them wherever you need, share and collaborate with friends, family and co-workers.",
             ]}
           />
           <Form

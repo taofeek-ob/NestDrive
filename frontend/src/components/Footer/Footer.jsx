@@ -23,7 +23,7 @@ export default function Footer(props) {
           </p>
           <p className="details-email">
             <img src="images/email-icon.svg" alt="email icon" />{" "}
-            example@fylo.com
+            example@NestDrive.com
           </p>
           <p className="details-location">
             <img src="images/location-icon.svg" alt="location icon" /> example,

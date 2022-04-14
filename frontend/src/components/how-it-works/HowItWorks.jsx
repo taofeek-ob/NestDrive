@@ -24,7 +24,7 @@ export default function HowItWorks(props) {
             headingType="heading"
             heading="Stay productive, wherever you are"
             paragraph={[
-              "Never let location be an issue when accessing your files. Fylo has you covered for all of your file  storage needs.",
+              "Never let location be an issue when accessing your files. NestDrive has you covered for all of your file  storage needs.",
               "Securely share files and folders with friends, family and colleagues for live collaboration. No email  attachments required.",
             ]}
           />
