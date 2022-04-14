@@ -4,7 +4,7 @@ require('solidity-coverage');
 const dotenv = require("dotenv");
 
 dotenv.config();
-const defaultNetwork = "rinkeby";
+const defaultNetwork = "mumbai";
 
 // This is a sample Hardhat task. To learn how to create your own go to
 // https://hardhat.org/guides/create-task.html
@@ -34,7 +34,7 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
       
       */
     },
-    rinkeby: {
+    mumbai: {
       url: process.env.ALCHEMY_API_URL,
       accounts: [process.env.METAMASK_KEY],
     },
