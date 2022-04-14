@@ -1,7 +1,12 @@
+<<<<<<< HEAD
 import React, { useState, useContext, useEffect } from "react";
 import "./css/Nav.css";
 import { ConnectContext } from "../../context/ConnectContext";
 import { Link } from "react-router-dom";
+=======
+import React, { useState } from "react";
+import "./css/Nav.css";
+>>>>>>> b5556bd87515246098b76df017cc9f0478993c56
 
 function Nav(props) {
   let signInClass;
@@ -12,6 +17,7 @@ function Nav(props) {
     signInClass = "nav-item nav-item-active";
   }
 
+<<<<<<< HEAD
   const { currentAccount, connectWallet } = useContext(ConnectContext);
 
   const[ shortenedAddress, setShortenedAddress ] = useState("");
@@ -24,6 +30,8 @@ function Nav(props) {
   
 
 
+=======
+>>>>>>> b5556bd87515246098b76df017cc9f0478993c56
   function toggle() {
     const AnimatedBtnTop = document.querySelector(".AnimatedBtn-Top");
     const AnimatedBtnMiddle = document.querySelector(".AnimatedBtn-Middle");
@@ -39,6 +47,7 @@ function Nav(props) {
   return (
     <nav className="nav">
       <div className={navItemsClass}>
+<<<<<<< HEAD
         <Link className="nav-item"  to="/public-files">
           Public Files
         </Link>
@@ -51,6 +60,17 @@ function Nav(props) {
                     </span>
                 )
                 }
+=======
+        <a className="nav-item" href="#">
+          Feature
+        </a>
+        <a className="nav-item" href="#">
+          Team
+        </a>
+        <a className={signInClass} href="#">
+          Sign In
+        </a>
+>>>>>>> b5556bd87515246098b76df017cc9f0478993c56
       </div>
       <div className="AnimatedBtn">
         <span className={"AnimatedBtn-Top"}></span>
