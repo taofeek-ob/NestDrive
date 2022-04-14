@@ -39,7 +39,9 @@ export default function Hero(props) {
             section="hero"
             headingType="heading"
             isdarkThemeActive={props.isdarkThemeActive}
-            heading="NestDrive, Your Decentralized Online Library"
+            heading="NestDrive, Your Decentralized Online Library.
+            Also note that files with innapropriate content will be flagged when noticed."
+           
             paragraph={[
               "Store your public and private books, audiobooks, articles on the blockchain. Access them wherever you need, share and collaborate with friends, family and co-workers.",
             ]}
@@ -53,7 +55,6 @@ export default function Hero(props) {
               Signed in as: <Link to="/dashboard">{shortenedAddress}</Link>
             </span>
           )}
-          
         </div>
       </article>
     </div>
