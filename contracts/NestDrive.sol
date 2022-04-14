@@ -8,8 +8,9 @@ import "@openzeppelin/contracts/security/Pausable.sol";
 /// @title A Decentralized file storage Dapp
 contract NestDrive is Pausable {
     constructor() {
-         moderator[msg.sender] = true;
+        moderator[msg.sender] = true;
     }
+
     using Counters for Counters.Counter;
 
     /// @notice total number of items ever created
@@ -33,6 +34,8 @@ contract NestDrive is Pausable {
 
     /// @dev mapping of blacklisted addresses
     mapping(address => bool) public blackListedAddresses;
+
+    uint[] public reportedFiles;
 
     event FileUploaded(
         uint fileId,
@@ -62,8 +65,11 @@ contract NestDrive is Pausable {
     }
 
     /// @dev modifier to check address is not blacklisted
-    modifier isNotBlacklisted(){
-        require(blackListedAddresses[msg.sender] == false,"Address is currently Blacklisted..");
+    modifier isNotBlacklisted() {
+        require(
+            blackListedAddresses[msg.sender] == false,
+            "Address is currently Blacklisted.."
+        );
         _;
     }
 
@@ -86,8 +92,9 @@ contract NestDrive is Pausable {
         string memory _fileSize,
         string memory _fileType,
         string memory _fileName,
-        string memory _fileDescription
-    )  whenNotPaused isNotBlacklisted public {
+        string memory _fileDescription,
+        bool _isPublic
+    ) public whenNotPaused isNotBlacklisted {
         /// @dev Make sure the file hash exists
         require(bytes(_fileHash).length > 0);
 
@@ -119,7 +126,7 @@ contract NestDrive is Pausable {
             _fileDescription,
             block.timestamp,
             msg.sender,
-            true
+            _isPublic
         );
 
         /// @notice Trigger an event when file is uploaded
@@ -132,41 +139,52 @@ contract NestDrive is Pausable {
             _fileDescription,
             block.timestamp,
             msg.sender,
-            true
+            _isPublic
         );
     }
 
-
     /// @dev Only the uploader can change file visibility
-    function makeFilePrivate(uint fileId) public whenNotPaused isNotBlacklisted {
+    function makeFilePrivate(uint fileId)
+        public
+        whenNotPaused
+        isNotBlacklisted
+    {
         /// @notice ensure that the uploader can change file visibility
         require(
-            Allfiles[fileId].uploader == msg.sender || moderator[msg.sender],"you can only manipulate your own file"
+            Allfiles[fileId].uploader == msg.sender || moderator[msg.sender],
+            "you can only manipulate your own file"
         );
 
-        /// @notice check that file is not public
+        /// @notice make files private
         Allfiles[fileId].isPublic = false;
 
         /// @dev increase count of private files
         _itemsPrivate.increment();
     }
+
     /// @dev Only the uploader can change file visibility
     function makeFilePublic(uint fileId) public whenNotPaused isNotBlacklisted {
         /// @notice ensure that the uploader can change file visibility
         require(
-            Allfiles[fileId].uploader == msg.sender,"you can only manipulate your own file"
+            Allfiles[fileId].uploader == msg.sender,
+            "you can only manipulate your own file"
         );
 
         /// @notice make file public
         Allfiles[fileId].isPublic = true;
 
-       
         /// @dev Increment public files
         _itemIds.increment();
     }
 
     /// @notice Function to retrieve all public files
-    function fetchPublicFiles() public whenNotPaused isNotBlacklisted view returns (File[] memory) {
+    function fetchPublicFiles()
+        public
+        view
+        whenNotPaused
+        isNotBlacklisted
+        returns (File[] memory)
+    {
         /// @notice total number of items ever created
         uint totalFiles = _itemIds.current();
 
@@ -190,7 +208,13 @@ contract NestDrive is Pausable {
     }
 
     /// @dev function to  fetch only files uploaded by the user
-    function fetchUserFiles() public whenNotPaused  isNotBlacklisted view returns (File[] memory) {
+    function fetchUserFiles()
+        public
+        view
+        whenNotPaused
+        isNotBlacklisted
+        returns (File[] memory)
+    {
         uint totalFiles = _itemIds.current();
         uint itemCount = 0;
         uint currentIndex = 0;
@@ -212,26 +236,37 @@ contract NestDrive is Pausable {
         }
         return items;
     }
+
     ///@dev function to pause the contract
-     function pause() public isMod(msg.sender) {
+    function pause() public isMod(msg.sender) {
         _pause();
     }
+
     ///@dev function to unpause the contract
     function unpause() public isMod(msg.sender) {
         _unpause();
     }
 
     ///@dev function to blacklist an address
-    function addToBlackList(address _addr) public isMod(msg.sender) returns(bool){
-        blackListedAddresses[_addr]=true;
+    function addToBlackList(address _addr)
+        public
+        isMod(msg.sender)
+        returns (bool)
+    {
+        blackListedAddresses[_addr] = true;
         return true;
     }
-     ///@dev function to remove an address from the blacklist
-    function removeFromBlackList(address _addr) public isMod(msg.sender) returns(bool){
-        blackListedAddresses[_addr]=false;
+
+    ///@dev function to remove an address from the blacklist
+    function removeFromBlackList(address _addr)
+        public
+        isMod(msg.sender)
+        returns (bool)
+    {
+        blackListedAddresses[_addr] = false;
         return true;
     }
-    
+
     /// @notice add a new moderator
     function assignMod(address _newMod) public whenNotPaused isMod(msg.sender) {
         moderator[_newMod] = true;
@@ -247,5 +282,19 @@ contract NestDrive is Pausable {
 
         /// Emit event when a moderator has been removed
         emit RemoveMod(msg.sender, _mod);
+    }
+
+    function report(uint fileId) public {
+        reportedFiles.push(fileId);
+    }
+
+    function clearReportedFiles(uint fileId) public isMod(msg.sender) {
+        /// @notice set status of file to private
+        Allfiles[fileId].isPublic = false;
+
+        /// @dev increase count of private files
+        _itemsPrivate.increment();
+        ///@dev empty array of reported files
+        delete reportedFiles;
     }
 }
