@@ -5,9 +5,9 @@ import { Link } from 'react-router-dom';
 function Logo(props) {
   let img;
   if (props.dark) {
-    img = "image-dark-theme/logo.svg";
+    img = "images/logo.png";
   } else {
-    img = "image-light-theme/logo.svg";
+    img = "images/logo.png";
   }
 
   return (
