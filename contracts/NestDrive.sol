@@ -277,8 +277,7 @@ contract NestDrive is Pausable {
 
     /// @notice remove an existing moderator
     function removeMod(address _mod) public whenNotPaused isMod(msg.sender) {
-        require(moderator[_mod], "Address is not a moderator.");
-        moderator[_mod] = false;
+         moderator[_mod] = false;
 
         /// Emit event when a moderator has been removed
         emit RemoveMod(msg.sender, _mod);
