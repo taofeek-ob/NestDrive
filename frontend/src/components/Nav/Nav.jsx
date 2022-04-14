@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import "./css/Nav.css";
+import { ConnectContext } from "../../context/ConnectContext";
+import { Link } from "react-router-dom";
 
 function Nav(props) {
   let signInClass;
@@ -9,6 +11,18 @@ function Nav(props) {
   } else {
     signInClass = "nav-item nav-item-active";
   }
+
+  const { currentAccount, connectWallet } = useContext(ConnectContext);
+
+  const[ shortenedAddress, setShortenedAddress ] = useState("");
+
+  useEffect(()=>{
+    setShortenedAddress(`${currentAccount.toString().slice(0, 5)}...${currentAccount.toString().slice(currentAccount.length - 4)}`)  
+
+  }, []);
+  
+  
+
 
   function toggle() {
     const AnimatedBtnTop = document.querySelector(".AnimatedBtn-Top");
@@ -25,15 +39,18 @@ function Nav(props) {
   return (
     <nav className="nav">
       <div className={navItemsClass}>
-        <a className="nav-item" href="#">
-          Feature
-        </a>
-        <a className="nav-item" href="#">
-          Team
-        </a>
-        <a className={signInClass} href="#">
-          Sign In
-        </a>
+        <Link className="nav-item"  to="/public-files">
+          Public Files
+        </Link>
+        {!currentAccount ?
+                    <a className="nav-item"
+                    onClick={connectWallet}>Connect Wallet</a>
+                :(
+                    <span className="nav-item">
+                    Signed in as: <Link to="/dashboard">{shortenedAddress}</Link>
+                    </span>
+                )
+                }
       </div>
       <div className="AnimatedBtn">
         <span className={"AnimatedBtn-Top"}></span>
