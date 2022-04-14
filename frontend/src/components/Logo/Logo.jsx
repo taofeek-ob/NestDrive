@@ -1,5 +1,6 @@
 import React from "react";
 import "./css/Logo.css";
+import { Link } from 'react-router-dom';
 
 function Logo(props) {
   let img;
@@ -11,9 +12,10 @@ function Logo(props) {
 
   return (
     <picture className="logo">
-      <a href="/">
-        <img src={img} alt="logo of website" />
-      </a>
+      <Link to="/">
+      <img src={img} alt="logo of website" /> <span className="brand"> NestDrive</span>
+        
+      </Link>
     </picture>
   );
 }

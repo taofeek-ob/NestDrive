@@ -23,16 +23,12 @@ export default function Hero(props) {
             section="hero"
             headingType="heading"
             isdarkThemeActive={props.isdarkThemeActive}
-            heading="All your files in one secure location, accessible anywhere"
+            heading="NestDrive, Your Decentralized Online Library"
             paragraph={[
-              "NestDrive stores your important files in one secure location. Access them wherever you need, share and collaborate with friends, family and co-workers.",
+              "Store your public and private books, audiobooks, articles on the blockchain. Access them wherever you need, share and collaborate with friends, family and co-workers.",
             ]}
           />
-          <Form
-            buttonValue="Get started"
-            hero={true}
-            isdarkThemeActive={props.isdarkThemeActive}
-          />
+          <button className="button">Get Started</button>
         </div>
       </article>
     </div>

@@ -1,11 +1,21 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import App from "./components/App";
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+import reportWebVitals from './reportWebVitals';
 import "./styles/main.css";
+import "./bootstrap.min.css"
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById("root")
+
+const container = document.getElementById('root');
+
+// Create a root.
+const root = ReactDOM.createRoot(container);
+
+
+root.render(
+  
+    
+      <App />
+   
+  
 );
