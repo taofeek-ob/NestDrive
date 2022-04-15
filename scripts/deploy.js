@@ -7,7 +7,7 @@ async function main(){
   so NestcoinContract here is a factory for instances of our Nestcoin contract.
   */
  console.log("deploying NESTDRIVE contract.......")
-    const NestdriveContract = await ethers.getContractFactory("NESTDRIVE");
+    const NestdriveContract = await ethers.getContractFactory("NestDrive");
 
     // here we deploy the contract
     const deployedNestDriveContract = await NestdriveContract.deploy();
