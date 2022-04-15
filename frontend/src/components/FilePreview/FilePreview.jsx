@@ -38,7 +38,7 @@ function FilePreview() {
      const handleReport =async()=>{
    
 
-      const result= await reportFile(id)
+      const result = await reportFile(id)
      
     
     
@@ -99,7 +99,7 @@ isMod()
     NestDriveContract = new ethers.Contract(contractAddress, contractABI, signer);
     NestDriveContract.on("newReport", onnewReport);
   }
-
+  
   return () => {
     if (NestDriveContract) {
       NestDriveContract.off("newReport", onnewReport);

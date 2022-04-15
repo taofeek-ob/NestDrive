@@ -5,6 +5,10 @@ import Article from "../Article/Article";
 import Form from "../Form/Form";
 import { ConnectContext } from "../../context/ConnectContext";
 
+
+
+
+
 export default function Hero(props) {
   const { currentAccount, connectWallet } = useContext(ConnectContext);
 
@@ -29,10 +33,10 @@ export default function Hero(props) {
             isdarkThemeActive={props.isdarkThemeActive}
             heading="NestDrive, Your Decentralized Online Library"
             paragraph={[
-              "Store your public and private books, audiobooks, articles on the blockchain. Access them wherever you need, share and collaborate with friends, family and co-workers.",
+              "Store your public and private books, audiobooks, articles on the blockchain. Access them wherever you need, share and collaborate with friends, family and co-workers. Note that files with inappropriate content will be flagged.",
             ]}
           />
-          {!currentAccount ? <button className="button" onClick={connectWallet}>Get Started</button> : ""}
+          {!currentAccount ? <button className="button" onClick={connectWallet}>Connect Wallet</button> : ""}
         </div>
       </article>
     </div>
