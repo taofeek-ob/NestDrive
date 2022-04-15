@@ -133,11 +133,12 @@ contract NestDrive is Pausable {
         string memory _fileName,
         string memory _fileDescription,
         bool _isPublic    
-    ) 
+    )
+
     /// @dev check to ensure that the uploader is not blacklisted
     /// @dev check to ensure the coontract is not paused
-
     public whenNotPaused isNotBlacklisted {
+        
         /// @dev Make sure the file hash exists
         require(bytes(_fileHash).length > 0);
 
@@ -228,6 +229,12 @@ contract NestDrive is Pausable {
         /// @dev check if the file is already private
         Allfiles[fileId].isPublic = false;
         uint index = indexOfreportedFiles[fileId];
+
+
+        reportedFiles[index] = reportedFiles[reportedFiles.length-1];
+        
+        
+        reportedFiles.pop();
 
         /// @dev reduce the reported file count when the reported file is made private
         reportedFiles[index] = reportedFiles[reportedFiles.length-1];
@@ -429,10 +436,10 @@ contract NestDrive is Pausable {
         emit RemoveMod(msg.sender, _mod);
     }
 
-    /// @dev function to  check if a connected user is a moderator for mod's features visibility
-        function checkMod(address _user) public view whenNotPaused isMod(msg.sender)  returns(bool){
-            bool ismod = moderator[_user];
-    return ismod;       
+    /// @dev function to  check if a connected user is a moderatore for mod's features visibility
+    function checkMod(address _user) public view whenNotPaused returns(bool){
+        bool ismod = moderator[_user];
+        return ismod;
     }
 
     /// @notice Add option to report a file
@@ -453,7 +460,7 @@ contract NestDrive is Pausable {
         
         /// @notice check that the files returned are private
         Allfiles[fileId].isPublic = false;
-
+        
         /// @dev increase count of private files
         _itemsPrivate.increment();
         

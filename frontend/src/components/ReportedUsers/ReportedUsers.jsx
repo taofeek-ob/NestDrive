@@ -1,13 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Header from "../Header/Header";
 import './reporteduser.css'
 import {Link} from "react-router-dom";
+import { ethers } from "ethers";
+import { contractABI, contractAddress } from "../utilities/constants";
+import SideBar from "../SideBar/SideBar";
 
-
-
-
+import { ConnectContext } from "../../context/ConnectContext";
 function ReportedUsers() {
+  const {fetchAll, reportedList, add2Blacklist } = useContext(ConnectContext);
 
+  const[Files, setFiles] =useState([])
   let [darkThemeActive, setDarkThemeActive] = useState(false);
 
   function switchActiveTheme() {
@@ -40,7 +43,59 @@ function ReportedUsers() {
     });
   });
 
+  const report=async()=>{
+    const nfl =[]
+const fl= await reportedList()
+
+//  nfl.push(fl)
+
+
+console.log(nfl)
+let test = []
+for(let i=0; i< fl.length; i++){
+  
+  let tt = await fetchAll(Number(fl[i]))
+  test.push(tt)
+}
+
+console.log(test)
+setFiles(test)
+
+  }
+
+ useEffect(()=>{
+  report()
+console.log(Files)
+ },[]
  
+ )
+
+ useEffect(() => {
+  let NestDriveContract;
+
+  const onaddInBlackList = (addr) => {
+    console.log("addInBlackList", addr);
+    alert( addr + " has been made blacklisted")
+  
+  };
+  
+
+  if (window.ethereum) {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+
+    NestDriveContract = new ethers.Contract(contractAddress, contractABI, signer);
+    NestDriveContract.on("addInBlackList", onaddInBlackList);
+  }
+
+  return () => {
+    if (NestDriveContract) {
+      NestDriveContract.off("addInBlackList", onaddInBlackList);
+    }
+  };
+}, []);
+
+
 
   return (
     <div>
@@ -51,31 +106,7 @@ function ReportedUsers() {
             <div className="row">
                 <div className="col-md-3">
                     <div className="sidebar p-3">
-
-                        <Link className="link p-3 mb-3" to="/dashboard-admins">
-                            Admins
-                        </Link>
-                        <Link className="link p-3 mb-3" to="/dashboard-add-files">
-                            Add Files
-                        </Link>
-                        <Link className="link p-3 mb-3" to="/dashboard-public-files">
-                            Public Files
-                        </Link>
-                        <Link className="link p-3 mb-3" to="/dashboard-private-files">
-                            Private Files
-                        </Link>
-                        <Link className="link p-3 mb-3" to="/dashboard-reported-files">
-                            Reported Files
-                        </Link>
-                        <Link className="link p-3 mb-3" to="/dashboardreported-users">
-                            Reported Users
-                        </Link>
-                        <Link className="link p-3 mb-3" to="/dashboard-blacklisted-users">
-                            Blacklisted Users
-                        </Link>
-                        <button className="btn btn-primary btn-large ms-3" >
-                            Disconnect
-                        </button>
+                      <SideBar/>
                     </div>
                 </div>
                 <div className="col-md-9">
@@ -92,21 +123,17 @@ function ReportedUsers() {
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>0x9F6Dd51f7a18Ce5D6FaFF9e5d3e5764Cca61cC44</td>
-                                    <td><button className="btn btn-lg btn-danger">BlackList User</button></td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">2</th>
-                                    <td>0x9F6Dd51f7a18Ce5D6FaFF9e5d3e5764Cca61cC44</td>
-                                    <td><button className="btn btn-lg btn-danger">BlackList User</button></td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>0x9F6Dd51f7a18Ce5D6FaFF9e5d3e5764Cca61cC44</td>
-                                    <td><button className="btn btn-lg btn-danger">Blacklist Users</button></td>
-                                </tr>
+                            {Files.map((file, key)=>{
+                                return(
+                                  <tr>
+                                  <th scope="row">{key+1}</th>
+                                  <td>{file.uploader}</td>
+                                  <td><button className="btn btn-lg btn-warning" onClick={()=>add2Blacklist(file.uploader)}>Blacklist User</button></td>
+                              </tr>
+                                )
+                                
+
+                              })}
                             </tbody>
                         </table>
                     </div>

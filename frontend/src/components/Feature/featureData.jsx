@@ -11,7 +11,7 @@ const featureData = [
     img: "security-illustration.svg",
     heading: "Security you can trust",
     paragraph:
-      "2-factor authentication and user-controlled encryption are just a couple of the security features we allow to help secure your files.",
+      "All blockchain transactions are secured by cryptography. Each block contains essentially a unique and private key that can be verified with a public key.",
   },
   {
     id: 3,

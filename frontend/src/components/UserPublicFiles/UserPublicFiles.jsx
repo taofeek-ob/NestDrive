@@ -1,15 +1,32 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Header from "../Header/Header";
 import './userpublicfiles.css'
 import {Link} from "react-router-dom";
-import File from '../File/File'
+import UserFiles from '../UserFiles/UserFiles'
+import SideBar from "../SideBar/SideBar";
 
-
+import { ConnectContext } from "../../context/ConnectContext";
 
 
 function UserPublicFiles() {
 
+  const {fetchPrivate } = useContext(ConnectContext);
   let [darkThemeActive, setDarkThemeActive] = useState(false);
+  const[Files, setFiles] =useState([])
+
+
+  const fetch =async()=>{
+   
+
+    const pubFiles = await fetchPrivate()
+    setFiles(pubFiles)
+  
+     } 
+  
+     useEffect(()=>{
+      fetch()
+     },[])
+
 
   function switchActiveTheme() {
     if (darkThemeActive) {
@@ -42,8 +59,10 @@ function UserPublicFiles() {
   });
 
   const children = [];  
-  for(let i = 0;i < 25;i++) {
-    children.push(<File isdarkThemeActive={darkThemeActive}/>);
+  const newFile= Files.slice().sort(function(a, b){return b.uploadTime - a.uploadTime})
+ const newer= newFile.filter(function(el){return el.isPublic===true})
+  for(let i = 0;i < newer.length;i++) {
+    children.push(<UserFiles public={newer[i]} isdarkThemeActive={darkThemeActive}/>);
   }
 
  
@@ -58,30 +77,7 @@ function UserPublicFiles() {
                 <div className="col-md-3">
                     <div className="sidebar p-3">
 
-                        <Link className="link p-3 mb-3" to="/dashboard-admins">
-                            Admins
-                        </Link>
-                        <Link className="link p-3 mb-3" to="/dashboard-add-files">
-                            Add Files
-                        </Link>
-                        <Link className="link p-3 mb-3" to="/dashboard-public-files">
-                            Public Files
-                        </Link>
-                        <Link className="link p-3 mb-3" to="/dashboard-private-files">
-                            Private Files
-                        </Link>
-                        <Link className="link p-3 mb-3" to="/dashboard-reported-files">
-                            Reported Files
-                        </Link>
-                        <Link className="link p-3 mb-3" to="/dashboardreported-users">
-                            Reported Users
-                        </Link>
-                        <Link className="link p-3 mb-3" to="/dashboard-blacklisted-users">
-                            Blacklisted Users
-                        </Link>
-                        <button className="btn btn-primary btn-large ms-3" >
-                            Disconnect
-                        </button>
+                        <SideBar/>
                     </div>
                 </div>
                 <div className="col-md-9">

@@ -2,7 +2,11 @@ import React, { useState, useContext, useEffect } from "react";
 import "./css/Nav.css";
 import { ConnectContext } from "../../context/ConnectContext";
 import { Link } from "react-router-dom";
+import Header from "../Header/Header";
+import Hero from "../Hero/Hero";
+import Feature from "../Feature/Feature";
 
+import Footer from "../Footer/Footer";
 function Nav(props) {
   let signInClass;
   let [navItemsClass, setNavItemsClass] = useState("nav-items");
@@ -39,18 +43,21 @@ function Nav(props) {
   return (
     <nav className="nav">
       <div className={navItemsClass}>
-        <Link className="nav-item"  to="/public-files">
+        <Link className="nav-item me-1" to="/">
+          Home
+        </Link>
+        <Link className="nav-item" to="/public-files">
           Public Files
         </Link>
-        {!currentAccount ?
-                    <a className="nav-item"
-                    onClick={connectWallet}>Connect Wallet</a>
-                :(
-                    <span className="nav-item">
-                    Signed in as: <Link to="/dashboard">{shortenedAddress}</Link>
-                    </span>
-                )
-                }
+        {!currentAccount ? (
+          <a className="nav-item" onClick={connectWallet}>
+            Connect Wallet
+          </a>
+        ) : (
+          <span className="nav-item">
+            Profile: <Link to="/dashboard">{shortenedAddress}</Link>
+          </span>
+        )}
       </div>
       <div className="AnimatedBtn">
         <span className={"AnimatedBtn-Top"}></span>

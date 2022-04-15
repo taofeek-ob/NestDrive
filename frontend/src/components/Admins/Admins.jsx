@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Header from "../Header/Header";
 import './admin.css'
 import {Link} from "react-router-dom";
-
-
+import SideBar from "../SideBar/SideBar"
+import { ConnectContext } from "../../context/ConnectContext";
 
 
 function Admins() {
-
+  const {makeMod, remMod } = useContext(ConnectContext);
   let [darkThemeActive, setDarkThemeActive] = useState(false);
 
   function switchActiveTheme() {
@@ -51,32 +51,7 @@ function Admins() {
             <div className="row">
                 <div className="col-md-3">
                     <div className="sidebar p-3">
-
-                        <Link className="link p-3 mb-3" to="/dashboard-admins">
-                            Admins
-                        </Link>
-                        <Link className="link p-3 mb-3" to="/dashboard-add-files">
-                            Add Files
-                        </Link>
-
-                        <Link className="link p-3 mb-3" to="/dashboard-public-files">
-                            Public Files
-                        </Link>
-                        <Link className="link p-3 mb-3" to="/dashboard-private-files">
-                            Private Files
-                        </Link>
-                        <Link className="link p-3 mb-3" to="/dashboard-reported-files">
-                            Reported Files
-                        </Link>
-                        <Link className="link p-3 mb-3" to="/dashboardreported-users">
-                            Reported Users
-                        </Link>
-                        <Link className="link p-3 mb-3" to="/dashboard-blacklisted-users">
-                            Blacklisted Users
-                        </Link>
-                        <button className="btn btn-primary btn-large ms-3" >
-                            Disconnect
-                        </button>
+                      <SideBar/>
                     </div>
                 </div>
                 <div className="col-md-9">
@@ -84,7 +59,7 @@ function Admins() {
                         <h3>Admins</h3>
                         <Link className="add-admin btn btn-primary" to='/dashboard-add-admin'>Add Admin</Link>
                     </div>
-                    <div className="row">
+                    <div className="row">   
                         <table class="table table-hover">
                             <thead>
                                 <tr>
@@ -112,6 +87,7 @@ function Admins() {
                             </tbody>
                         </table>
                     </div>
+                    
                 </div>
             </div>
         </div>

@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Header from "../Header/Header";
 import './userprivatefiles.css'
 import {Link} from "react-router-dom";
-import File from '../File/File'
+import UserFiles from '../UserFiles/UserFiles'
+import SideBar from "../SideBar/SideBar";
 
 
-
+import { ConnectContext } from "../../context/ConnectContext";
 
 function UserPrivateFiles() {
-
+  const {fetchPrivate } = useContext(ConnectContext);
   let [darkThemeActive, setDarkThemeActive] = useState(false);
+  const[Files, setFiles] =useState([])
 
   function switchActiveTheme() {
     if (darkThemeActive) {
@@ -20,6 +22,21 @@ function UserPrivateFiles() {
       document.querySelector("#root").style.backgroundColor = "#1C2431";
     }
   }
+
+  const fetch = async()=>{
+   
+
+    const pubFiles = await fetchPrivate()
+    setFiles(pubFiles)
+   // console.log(pubFiles)
+  //   console.log(typeof(pubFiles.slice()
+  //   .sort(function(a, b){return b.uploadTime - a.uploadTime})[1]))
+  // console.log(newFiles)
+     } 
+  
+     useEffect(()=>{
+      fetch()
+     },[])
 
   useEffect(() => {
     let headerFixedContainer = document.querySelector(".header-fixed");
@@ -41,11 +58,19 @@ function UserPrivateFiles() {
     });
   });
 
+  // const children = [];  
+  // for(let i = 0;i < Files.length;i++) {
+  //   children.push(<File public={Files
+  //     .filter(function(el){return el.isPublic===false}).slice().sort(function(a, b){return b.uploadTime - a.uploadTime})[i]} isdarkThemeActive={darkThemeActive}/>)
+  // }
   const children = [];  
-  for(let i = 0;i < 25;i++) {
-    children.push(<File isdarkThemeActive={darkThemeActive}/>);
+ const newFile= Files.slice().sort(function(a, b){return b.uploadTime - a.uploadTime})
+ const newer= newFile.filter(function(el){return el.isPublic===false})
+//setnewFiles(newFile)
+//console.log(newer)
+  for(let i = 0;i < newer.length;i++) {
+    children.push(<UserFiles public={newer[i]} isdarkThemeActive={darkThemeActive}/>);
   }
-
  
 
   return (
@@ -58,30 +83,7 @@ function UserPrivateFiles() {
                 <div className="col-md-3">
                     <div className="sidebar p-3">
 
-                        <Link className="link p-3 mb-3" to="/dashboard-admins">
-                            Admins
-                        </Link>
-                        <Link className="link p-3 mb-3" to="/dashboard-add-files">
-                            Add Files
-                        </Link>
-                        <Link className="link p-3 mb-3" to="/dashboard-public-files">
-                            Public Files
-                        </Link>
-                        <Link className="link p-3 mb-3" to="/dashboard-private-files">
-                            Private Files
-                        </Link>
-                        <Link className="link p-3 mb-3" to="/dashboard-reported-files">
-                            Reported Files
-                        </Link>
-                        <Link className="link p-3 mb-3" to="/dashboardreported-users">
-                            Reported Users
-                        </Link>
-                        <Link className="link p-3 mb-3" to="/dashboard-blacklisted-users">
-                            Blacklisted Users
-                        </Link>
-                        <button className="btn btn-primary btn-large ms-3" >
-                            Disconnect
-                        </button>
+                        <SideBar/>
                     </div>
                 </div>
                 <div className="col-md-9">

@@ -1,4 +1,8 @@
-import React from "react";
+import React, { useContext, useState, useEffect } from "react";
+import { ethers } from "ethers";
+import moment from 'moment';
+
+import { shortenAddress } from "../utilities/shortenAddress";
 import './file.css'
 import {Link} from 'react-router-dom';
 
@@ -15,24 +19,23 @@ function File(props) {
 
     let imageSrc = myArray[Math.floor(Math.random()*myArray.length)];
 
-  
+  useEffect(()=>{
+    console.log(props.public)
+ // alert(props.public.fileName)
+  })
  
 
   return (
-    <div className="col-12 col-md-6">
+    <div className="col-12 col-md-4">
       <div className={card}>
             <div className="row g-0">
-              <div className="col-md-4">
-                <img src={imageSrc} className="img-fluid rounded-start" alt="..."/>
-              </div>
-              <div className="col-md-8">
+                <img src={imageSrc} className="img-fluid rounded-start" alt="..." />
                 <div className="card-body">
-                  <h5 className="card-title">Card title</h5>
-                  <p className="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                  <p className="card-text"><small className="text-muted">Uploaded on  13th April 2022</small></p>
-                  <Link className="btn btn-small btn-primary" to="/file">View File</Link>
+                  <h5 className="card-title">{props.public.fileName}</h5>
+                  <p className="card-text">{props.public.fileDescription}</p>
+                  <p className="card-text"><small className="text-muted">Uploaded on  {moment.unix(props.public.uploadTime).format("Do MM YYYY")}</small></p>
+                  <Link className="btn btn-small btn-primary" to="/file" state={Number(props.public.fileId)}>View File</Link>
                 </div>
-              </div>
             </div>
         </div>
     </div>

@@ -1,14 +1,27 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Header from "../Header/Header";
 import './addfile.css'
 import {Link} from "react-router-dom";
+import { ethers } from "ethers";
+import { contractABI, contractAddress } from "../utilities/constants";
+import { Form, Button, Badge, ProgressBar, Container } from 'react-bootstrap';
+import { create as ipfsHttpClient } from "ipfs-http-client";
+import SideBar from "../SideBar/SideBar";
 
-
-
+import { ConnectContext } from "../../context/ConnectContext";
+const ipfs = ipfsHttpClient("https://ipfs.infura.io:5001/api/v0");
 
 function AddFiles() {
 
   let [darkThemeActive, setDarkThemeActive] = useState(false);
+  const {uploads } = useContext(ConnectContext);
+  const[description, setdescription] =useState("")
+
+  const [file, setFile] = useState({})
+  const [fileUrl, setFileUrl] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [uploaded, setUploaded] = useState(false)
+  const [pub, setpub] = useState(true)
 
   function switchActiveTheme() {
     if (darkThemeActive) {
@@ -19,6 +32,18 @@ function AddFiles() {
       document.querySelector("#root").style.backgroundColor = "#1C2431";
     }
   }
+
+  function formatBytes(bytes, decimals = 2) {
+    if (bytes === 0) return '0 Bytes';
+
+    const k = 1024;
+    const dm = decimals < 0 ? 0 : decimals;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+}
 
   useEffect(() => {
     let headerFixedContainer = document.querySelector(".header-fixed");
@@ -38,9 +63,115 @@ function AddFiles() {
       }
       lastScrolled = scrolled;
     });
+    console.log(pub)
   });
 
+  const uploadFile = async (e) => {
+    setLoading(true)
+    e.preventDefault()
+
+    try {
+        const added = await ipfs.add(file)
+        
+        const url = `https://ipfs.infura.io/ipfs/${added.path}`
+        const hash=  (added.path).toString()
+        const name= (file.name.substr(0, file.name.lastIndexOf("."))).toString()
+      
+        const size = (file.size).toString()
+       // const ftype=(file.type).toString()
+       const ftype= (file.name.split('.').pop()).toString()
+       
+          await uploads(hash, size, ftype, name,description, pub)
+        
+        //setUrl(url)
+        setFileUrl(url)
+       
+      
+        setUploaded(true)
+      
+       
+    } catch (err) {
+        console.log('Error uploading the file : ', err)
+    }
+    setLoading(false)
+    
+}
+
+const preUpload = (e) => {
+  setUploaded(false)
+    if (e.target.value !== '') {
+        setFile(e.target.files[0])
+    } else {
+        setFile({})
+    }
+}
+
+const fileAndUploadButton = () => {
+    if (file.name) {
+        if (!loading) {
+            return (
+                <div>
+                    <h5>
+                        {file.name} <Badge pill>{formatBytes(file.size)}</Badge>
+                    </h5>
+
+                    {uploaded ? (
+                        <h5>
+                            ✅{' '}
+                            <a
+                                href={fileUrl}
+                                target='_blank'
+                                rel='noopener noreferrer'
+                            >
+                                File
+                            </a>{' '}
+                            Uploaded Successfully ✅
+                            
+                        </h5>
+                    ) : (
+                      <div className="col-12">
+                      <button type="submit" className="btn btn-primary">Upload File</button>
+                  </div>
+                    )}
+                </div>
+            )
+        } else {
+            return (
+                <Container>
+                    <h4>Uploading File</h4>
+                    <ProgressBar animated now={100} />
+                    <h4>Please Wait ...</h4>
+                </Container>
+            )
+        }
+    }
+}
  
+useEffect(() => {
+    let NestDriveContract;
+  
+    const onFileUploaded = (id, hash,size, type, name, description, time, uploader, ispublic) => {
+      console.log("FileUploaded", name);
+      alert( name + " has been uploaded by " + uploader )
+    
+    };
+    
+  
+    if (window.ethereum) {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+  
+      NestDriveContract = new ethers.Contract(contractAddress, contractABI, signer);
+      NestDriveContract.on("FileUploaded", onFileUploaded);
+    }
+  
+    return () => {
+      if (NestDriveContract) {
+        NestDriveContract.off("FileUploaded", onFileUploaded);
+      }
+    };
+  }, []);
+  
 
   return (
     <div>
@@ -51,31 +182,7 @@ function AddFiles() {
             <div className="row">
                 <div className="col-md-3">
                     <div className="sidebar p-3">
-
-                    <Link className="link p-3 mb-3" to="/dashboard-admins">
-                            Admins
-                        </Link>
-                        <Link className="link p-3 mb-3" to="/dashboard-add-files">
-                            Add Files
-                        </Link>
-                        <Link className="link p-3 mb-3" to="/dashboard-public-files">
-                            Public Files
-                        </Link>
-                        <Link className="link p-3 mb-3" to="/dashboard-private-files">
-                            Private Files
-                        </Link>
-                        <Link className="link p-3 mb-3" to="/dashboard-reported-files">
-                            Reported Files
-                        </Link>
-                        <Link className="link p-3 mb-3" to="/dashboard-reported-users">
-                            Reported Users
-                        </Link>
-                        <Link className="link p-3 mb-3" to="/dashboard-blacklisted-users">
-                            Blacklisted Users
-                        </Link>
-                        <button className="btn btn-primary btn-large ms-3" >
-                            Disconnect
-                        </button>
+                      <SideBar/>
                     </div>
                 </div>
                 <div className="col-md-9">
@@ -83,28 +190,29 @@ function AddFiles() {
                         <h3>Add Files</h3>
                     </div>
                     <div className="row">
-                    <form className="row g-3">
-                        <div className="col-md-12">
-                            <label  className="form-label">Name</label>
-                            <input type="text" className="form-control" id="inputEmail4"/>
-                        </div>
+                    <form className="row g-3" onSubmit={uploadFile}>
+                        
                         <div className="col-md-12">
                             <label className="form-label">Description</label>
-                            <textarea className="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                            <textarea className="form-control" id="exampleFormControlTextarea1" rows="3" value={description} onChange={(e)=>setdescription(e.target.value)} required></textarea>
                         </div>
-                        <div className="col-12">
-                            <label  className="form-label">Upload File</label>
-                            <input type="file" className="form-control" id="inputAddress" placeholder="Description"/>
-                        </div>
+                        <Form.Control
+                  required
+                  type='file'
+                  onChange={(e) => preUpload(e)}
+                  className='mb-3'
+              />
                         <div className="col-12">
                             <div className="form-check form-switch">
-                            <input className="form-check-input" type="checkbox" />
+                            <input className="form-check-input" type="checkbox" onChange={(e)=>{setpub(!pub)
+                              console.log(pub)}} />
                              <label className="form-check-label" >Make Private</label>
                              </div>
                         </div>
-                        <div className="col-12">
-                            <button type="submit" className="btn btn-primary">Add File</button>
-                        </div>
+
+                        {fileAndUploadButton()}
+                        <br /><br />
+                       
                     </form>
                     </div>
                 </div>

@@ -4,7 +4,7 @@ require('solidity-coverage');
 const dotenv = require("dotenv");
 
 dotenv.config();
-const defaultNetwork = "mumbai";
+const defaultNetwork = "rinkeby";
 
 // This is a sample Hardhat task. To learn how to create your own go to
 // https://hardhat.org/guides/create-task.html
