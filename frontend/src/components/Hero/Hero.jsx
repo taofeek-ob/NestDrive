@@ -4,6 +4,10 @@ import Picture from "../Picture/Picture";
 import Article from "../Article/Article";
 import Form from "../Form/Form";
 
+
+
+
+
 export default function Hero(props) {
   return (
     <div
@@ -25,7 +29,7 @@ export default function Hero(props) {
             isdarkThemeActive={props.isdarkThemeActive}
             heading="NestDrive, Your Decentralized Online Library"
             paragraph={[
-              "Store your public and private books, audiobooks, articles on the blockchain. Access them wherever you need, share and collaborate with friends, family and co-workers.",
+              "Store your public and private books, audiobooks, articles on the blockchain. Access them wherever you need, share and collaborate with friends, family and co-workers. Note that files with inappropriate content will be flagged.",
             ]}
           />
           <button className="button">Get Started</button>
