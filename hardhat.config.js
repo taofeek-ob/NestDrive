@@ -35,12 +35,12 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
       */
     },
     mumbai: {
-      url: process.env.ALCHEMY_API_URL,
+      url: process.env.POLYGON_ALCHEMY_API_URL,
       accounts: [process.env.METAMASK_KEY],
     },
   },
   etherscan: {
-    apiKey: process.env.ETHERSCAN_KEY,
+    apiKey: process.env.POLYGON_KEY,
   },
 };
 

@@ -29,20 +29,13 @@ contract NestDrive is Pausable {
     /// @dev mapping outlining all files created in a state variable `Allfiles`
     mapping(uint => File) public Allfiles;
 
-    /// @dev mapping of blacklisted addresses
+    /// @notice mapping of blacklisted addresses
     mapping(address => bool) public blackListedAddresses;
 
-/// @notice stores the list of blacklisted addresses
-address[] public blackList;
-
-/// @dev mapping of blacklisted addresses index
-mapping(address=> uint) indexOfblackList;
-//
+    /// @notice array of reported file id
     uint[] public reportedFiles;
-    mapping(uint=>uint) indexOfreportedFiles;
-    mapping(uint => bool) public reportExist;
 
- /// @notice emits a notice when a new file is uploaded
+    /// @notice emits a notice when a new file is uploaded
     /// @dev emit an event containing all the file details when file is uploaded
     event FileUploaded(
         uint fileId,
@@ -64,42 +57,15 @@ mapping(address=> uint) indexOfblackList;
     /// @dev Emit event when a moderator is removed
     event RemoveMod(address remover, address newMod);
 
-    /// @notice Notification when a address is blacklisted
-    /// @dev Emit event when a new address is blacklisted
-    event addInBlackList(address addr);
-
-
-    /// @notice Notification when a blacklisted address is removed
-    /// @dev Emit event when a blacklisted address is removed
-    event remInBlackList(address addr);
-
- /// @notice Notification when a file is reported
-    /// @dev Emit event when a file  is reported
-    event newReport(uint _itemIds);
-
-    /// @notice Notification when a user makes their file private
-    /// @dev Emit event when a user makes their file private
-    event madePrivate(uint _itemIds);
-
-    /// @notice Notification when a user makes their file public
-    /// @dev Emit when a user makes their file public
-    event madePublic(uint _itemIds);
-
-    /// @notice Notification when a moderator makes a file private as penalty
-    /// @dev Emit event when a moderator makes a file private as penalty
-    event madePrivateMod(uint _itemIds);
-
-
-
-
-    /// @dev modifier to ensure only moderators can call selected functions.
+    /// @notice Ensure that only a moderator can call a specific function.
+    /// @dev Modifier to check that address is an assigned moderator.
     modifier isMod(address _user) {
         bool ismod = moderator[_user];
         require(ismod, "Only Moderators Have Access!");
         _;
     }
 
-    /// @dev modifier to check address is not blacklisted
+    /// @notice modifier to check address is not blacklisted
     modifier isNotBlacklisted() {
         require(
             blackListedAddresses[msg.sender] == false,
@@ -120,7 +86,6 @@ mapping(address=> uint) indexOfblackList;
         address uploader;
         bool isPublic;
     }
-   
 
     /// @notice Function to upload a file
     function uploadFile(
@@ -195,7 +160,7 @@ mapping(address=> uint) indexOfblackList;
         /// @notice ensure that the uploader can change file visibility
         /// @dev Check to ensure that the person changing visibility of the file is the uploader or a moderator
         require(
-            Allfiles[fileId].uploader == msg.sender,
+            Allfiles[fileId].uploader == msg.sender || moderator[msg.sender],
             "you can only manipulate your own file"
         );
 
@@ -204,56 +169,16 @@ mapping(address=> uint) indexOfblackList;
 
         /// @dev increase count of private files
         _itemsPrivate.increment();
-
-        /// @notice emit when a user fmakes their file from private
-        emit madePrivate(fileId);
-    }
-
-
-
-    /// @dev Only the uploader can change file visibility
-    function makeReportedPrivate(uint fileId)
-        public
-        whenNotPaused
-        isNotBlacklisted
-    {
-        /// @notice ensure that the moderator can change file visibility
-        require(
-             moderator[msg.sender],
-            "only admin can call this"
-        );
-
-        /// @notice make files private
-        Allfiles[fileId].isPublic = false;
-
-        uint index = indexOfreportedFiles[fileId];
-         reportedFiles[index] = reportedFiles[reportedFiles.length-1];
-        
-  reportedFiles.pop();
-
-
-        /// @dev increase count of private files
-        _itemsPrivate.increment();
-
-        /// @notice emit when a moderator makes a file private as penalty
-        emit madePrivateMod(fileId);
     }
 
     /// @notice Only the uploader can change a private file visibility to public
     /// @dev file visibility can be changed when the file is not blacklisted
     /// @dev file visibility can be changed if the contract is not paused
     function makeFilePublic(uint fileId) public whenNotPaused isNotBlacklisted {
-       
-        /// @notice ensure that the uploader can change file visibility
+        
         require(
             Allfiles[fileId].uploader == msg.sender,
             "you can only manipulate your own file"
-        );
-
-        /// @notice ensure that the reported files can not be made puvlic after penalty
-          require(
-            reportExist[fileId] == false,
-            "File has been blacklisted for violation, and cannot be made public."
         );
 
         /// @notice make file public
@@ -261,9 +186,6 @@ mapping(address=> uint) indexOfblackList;
 
         /// @dev Increment public files
         _itemIds.increment();
-
-        /// @notice emit when a user makes their file public
-        emit madePublic(fileId);
     }
 
     /// @notice Function to retrieve all public files
@@ -299,7 +221,6 @@ mapping(address=> uint) indexOfblackList;
         }
         return items;
     }
-    
 
     /// @notice function to  fetch only files uploaded by the user
     /// @return list of items uploaded by the user
@@ -359,12 +280,7 @@ mapping(address=> uint) indexOfblackList;
         returns (bool)
     {
         blackListedAddresses[_addr] = true;
-        blackList.push(_addr);
-
-        /// @notice emit when a address is blacklisted
-        emit addInBlackList(_addr);
         return true;
-
     }
 
     ///@dev function to remove an address from the blacklist
@@ -373,35 +289,9 @@ mapping(address=> uint) indexOfblackList;
         isMod(msg.sender)
         returns (bool)
     {
-        uint index = indexOfblackList[_addr];
-        blackList[index] = blackList[blackList.length-1];
-        
-        blackList.pop();
         blackListedAddresses[_addr] = false;
-
-        /// @notice emit when a address is removed from blacklist
-        emit remInBlackList(_addr);
         return true;
     }
-
-
-    /// @dev function to  fetch only all blacklisted addresses
-    function blackListArray()
-        public  view
-            isMod(msg.sender)
-            returns (address[] memory)
-        { 
-            return blackList;
-        }
-
-    /// @dev function to return an array of  reported Files using fileId
-    function reportedListArray()
-        public  view
-            isMod(msg.sender)
-            returns (uint[] memory)
-        {
-            return reportedFiles;
-        }
 
     /// @notice add a new moderator
     function assignMod(address _newMod) public whenNotPaused isMod(msg.sender) {
@@ -415,29 +305,16 @@ mapping(address=> uint) indexOfblackList;
     function removeMod(address _mod) public whenNotPaused isMod(msg.sender) {
          moderator[_mod] = false;
 
-        /// @notice Emit event when a moderator has been removed
+        /// Emit event when a moderator has been removed
         emit RemoveMod(msg.sender, _mod);
     }
 
-    /// @dev function to  check if a connected user is a moderatore for mod's features visibility
-        function checkMod(address _user) public view whenNotPaused isMod(msg.sender)  returns(bool){
-            bool ismod = moderator[_user];
-    return ismod;       
-    }
-
-    /// @dev function to  report a file a user
-        function report(uint fileId) public {
-            require(
-                reportExist[fileId] == false,
-                "File has been reported earlier."
-            );
-            reportExist[fileId]= true;
+    /// @notice Add option to report a file
+    function report(uint fileId) public {
         reportedFiles.push(fileId);
-
-        /// @notice emit when a file is reported
-        emit newReport(fileId);
     }
 
+    /// @dev Option for moderator to remove a reported file
     function clearReportedFiles(uint fileId) public isMod(msg.sender) {
         
         /// @notice check that the files returned are private
