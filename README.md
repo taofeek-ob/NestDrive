@@ -165,13 +165,13 @@ $ npx hardhat compile
 > ### Deploy
 - To deploy the smartcontract:
 ```
-$ npx hardhat run scripts/deploy.js --network rinkeby
+$ npx hardhat run scripts/deploy.js --network mumbai
 ```
 #
 > ### Verify
 - To verify the smartcontract:
 ```
-$ npx hardhat verify ...............
+$ npx hardhat verify 0x459eBd3d66cfBfC118e8a20c4F16Fc75B376253d --network mumbai
 ```
 **`*Note:`**
 
@@ -235,12 +235,16 @@ $ npx hardhat node
 ```
 $ npx hardhat test --network localhost
 ``` 
+<p align="center" width="100%">
+  <img src="https://drive.google.com/uc?export=view&id=11oFAb-CTUmytFSc458kWkenBOe038kqU" alt="coverage tests"/>
+</p>
+
 #
 > ## Verified Contract Addresses
 
 - The NestDrive Contract Address
 
-  .....................
+https://mumbai.polygonscan.com/address/0x459eBd3d66cfBfC118e8a20c4F16Fc75B376253d#code
 
 #  
 > ## Live Link
