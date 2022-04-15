@@ -50,6 +50,52 @@ describe("Moderators() and file Restriction (blacklist,access controls)", functi
         await expect(fileDrive.connect(secondAccount).removeMod(thirdAccount.address)).to.be.revertedWith("Only Moderators Have Access!");
     
     })
+    it("Should be able to retrive file arrays of blacklist",async function(){
+        const [ owner, secondAccount, thirdAccount] = await ethers.getSigners();
+        console.log('\t'," Getting blacklisted address by moderator");
+        blackListArray = await fileDrive.connect(owner).blackListArray();
+        
+        expect(blackListArray.length).to.greaterThanOrEqual(0);
+        console.log('\t',"Passed...");
+
+        ///@dev Should not be able to view blacklisted if not a moderator
+        console.log('\t'," Getting blacklisted address by a non moderator");
+         await expect(fileDrive.connect(secondAccount).blackListArray()).to.be.revertedWith("Only Moderators Have Access!");
+        
+        console.log('\t',"Passed...");
+       
+    })
+    
+    it("Should be able to retrive file arrays of reported files",async function(){
+        const [ owner, secondAccount, thirdAccount] = await ethers.getSigners();
+        console.log('\t'," Getting reported addresses by moderator");
+        reportedListArray = await fileDrive.connect(owner).reportedListArray();
+        expect(reportedListArray.length).to.greaterThanOrEqual(0);
+        console.log('\t',"Passed...");
+
+        ///@dev Should not be able to view blacklisted if not a moderator
+        console.log('\t'," Getting reported addresses by a non moderator");
+         await expect(fileDrive.connect(secondAccount).reportedListArray()).to.be.revertedWith("Only Moderators Have Access!");
+        
+        console.log('\t',"Passed...");
+       
+    })
+    it("Should be able to retrive moderators addresses",async function(){
+        const [ owner, secondAccount, thirdAccount] = await ethers.getSigners();
+        console.log('\t',"Attempting Getting moderators addresses by a moderator");
+        checkMod = await fileDrive.connect(owner).checkMod("0x5444c30210d8a0a156178cfb8048b4137c0d40d1");
+        console.log("this is checkmod",checkMod)
+        // expect(checkMod).to.equal(false);
+        console.log('\t',"Passed...");
+
+        ///@dev Should not be able to view blacklisted if not a moderator
+        console.log('\t'," Getting reported addresses by a non moderator");
+         await expect(fileDrive.connect(secondAccount).checkMod("0x5444c30210d8a0a156178cfb8048b4137c0d40d1")).to.be.revertedWith("Only Moderators Have Access!");
+        
+        console.log('\t',"Passed...");
+       
+    })
+    
 });
 
 describe("UploadFile , Change file Visibility (Public and Private)...",function(){
@@ -188,6 +234,13 @@ describe("UploadFile , Change file Visibility (Public and Private)...",function(
         expect(txResult1.status).to.equal(1);
         console.log("Revert if address is not the owner of the file");
         await expect(fileDrive.connect(thirdAccount).makeFilePublic(2)).to.be.revertedWith("you can only manipulate your own file");
+        console.log('\t',"Passed!")
+
+        //making a reported file public should revert
+        console.log("Revert if file is reported...");
+        console.log('\t',"Reporting file...");
+        reportFile = await fileDrive.connect(thirdAccount).report(1);
+        await expect(fileDrive.connect(secondAccount).makeFilePublic(1)).to.be.revertedWith("File has been blacklisted for violation, and cannot be made public.");
         console.log('\t',"Passed")
     })
 })
@@ -259,6 +312,23 @@ describe("Files Handling (fetch files, report files )",function(){
         console.log('\t',"Validating file report ....");
         expect(txResult.status).to.equal(1);
         console.log('\t',"File ID 1 sucessfully reported!");
+
+        ///@dev can only report file once
+        console.log('\t'," Attempting to report an already reported files...." );
+        await expect(fileDrive.connect(secondAccount).report(2)).to.be.revertedWith("File has been reported earlier.");
+        
+        console.log('\t',"Passed..!");
+
+
+        ///@dev only moderators can flag a file 
+        console.log('\t',"Attempting to make file private! from an account not a moderator...");
+        await expect( fileDrive.connect(secondAccount).makeReportedPrivate(2)).to.be.revertedWith("only admin can call this");
+        console.log('\t',"passed...");
+        console.log('\t',"Attempting to make file private! from a moderator address...");
+        makeReportedPrivate = await fileDrive.connect(owner).makeReportedPrivate(2);
+        const txResult2 = await makeReportedPrivate.wait();
+        expect(txResult2.status).to.equal(1);
+        console.log('\t',"passed...");
         
         console.log('\t',"Validated status of flagged file .... SUCCESS!");
         ///@dev clear report files
@@ -389,6 +459,18 @@ describe("Pause and Unpause contract test",function(){
         //removing address from moderators list
         console.log('\t'," Attempting to remove address from list of moderators when contract is paused...");
         await expect(fileDrive.connect(owner).removeMod(secondAccount)).to.be.reverted;
+        count+=1;
+        console.log('\t',"Passed!...",count);
+        
+        unpause = await fileDrive.connect(owner).unpause();
+        const txResult = await unpause.wait();
+        expect(txResult.status).to.equal(1);
+    })
+    it("Should not be able to make reported files private", async function(){
+        const [ owner, secondAccount] = await ethers.getSigners();
+        //making reported file private by admin
+        console.log('\t'," Attempting to make a file private when contract is paused...");
+        await expect(fileDrive.connect(owner).makeReportedPrivate(2)).to.be.reverted;
         count+=1;
         console.log('\t',"Passed!...",count);
         
