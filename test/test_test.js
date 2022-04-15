@@ -452,7 +452,7 @@ describe("BlackList Address", function(){
     
 })
 
-describe("Remove Address from Blacklist", function(){
+describe("Remove Address from Blacklist. Get Blacklist", function(){
     it("Should be able to remove address if moderator", async function(){
         const [ owner, secondAccount, thirdAccount] = await ethers.getSigners();
         const blacklist = await contract.connect(owner).removeFromBlackList(secondAccount.address);
@@ -466,10 +466,24 @@ describe("Remove Address from Blacklist", function(){
         await expect(contract.connect(thirdAccount).removeFromBlackList(fourthAccount.address)).to.be.revertedWith("Only Moderators Have Access!");
     })
 
+    it("Should be able to get blacklist Array", async function(){
+        const [ owner, secondAccount, thirdAccount] = await ethers.getSigners();
+        const blacklistArray = await contract.connect(owner).blackListArray();
+        expect(blacklistArray.length).to.be.equal(2);
+    })
+
     
 })
 
-describe("Moderator Assigning and Removal", function(){
+
+
+
+
+
+
+
+
+describe("Moderator Assigning and Removal, Check Moderator", function(){
     it("Should be able to assign moderator if moderator", async function(){
         const [ owner, secondAccount, thirdAccount] = await ethers.getSigners();
         const blacklist = await contract.connect(owner).assignMod(secondAccount.address);
@@ -509,11 +523,33 @@ describe("Moderator Assigning and Removal", function(){
         await expect(contract.connect(thirdAccount).removeMod(fourthAccount.address)).to.be.reverted;
     })
 
+    it("Should be able to check for  moderator ", async function(){
+        const [ owner, secondAccount, thirdAccount, fourthAccount] = await ethers.getSigners();
+        await contract.connect(owner).unpause();
+        await contract.connect(owner).assignMod(secondAccount.address);
+        const checkMod = await contract.connect(owner).checkMod(secondAccount.address);
+        expect(checkMod).to.be.equal(true);
+    })
+
+    it("Should be able to check for  moderator ", async function(){
+        const [ owner, secondAccount, thirdAccount, fourthAccount] = await ethers.getSigners();
+        await contract.connect(owner).unpause();
+        const checkMod = await contract.connect(owner).checkMod(thirdAccount.address);
+        expect(checkMod).to.be.equal(false);
+    })
+
+    it("Should not be able to check for  moderator if contract is paused  ", async function(){
+        const [ owner, secondAccount, thirdAccount, fourthAccount] = await ethers.getSigners();
+        await contract.connect(owner).pause();
+        await expect(contract.connect(owner).checkMod(fourthAccount.address)).to.be.reverted;
+    })
+
 })
 
 describe("Report and Clear Reported Files", function(){
     it("Should be able report a file", async function(){
         const [ owner, secondAccount, thirdAccount] = await ethers.getSigners();
+        await contract.connect(owner).unpause();
         const report = await contract.connect(owner).report(4);
         const reported = await report.wait();
         expect(reported.status).to.be.equal(1);
@@ -526,12 +562,42 @@ describe("Report and Clear Reported Files", function(){
         expect(clearreported.status).to.be.equal(1);
     })
 
+
     it("Should not be able to clear reported files if address is not a moderator", async function(){
         const [ owner, secondAccount, thirdAccount, fourthAccount] = await ethers.getSigners();
-        await contract.connect(owner).report(4);
+        await contract.connect(owner).report(5);
         await expect(contract.connect(thirdAccount).clearReportedFiles(4)).to.be.revertedWith("Only Moderators Have Access!")
     })
+
+    it("Should be able to get reportedList", async function(){
+        const [ owner, secondAccount, thirdAccount, fourthAccount] = await ethers.getSigners();
+        const reportedFiles = await contract.connect(owner).reportedListArray();
+        expect(reportedFiles.length).to.be.equal(1);
+    })
+
+
 
     
 
 })
+
+describe("Admin Taking Action on User", function(){
+    it("Should be able make a users post private", async function(){
+
+        const [ owner, secondAccount, thirdAccount] = await ethers.getSigners();
+        const makeprivate = await contract.connect(owner).makeReportedPrivate(6);
+        const makeprivated = await makeprivate.wait();
+        expect(makeprivated.status).to.be.equal(1);
+    })   
+    
+    it("Should not be able make a users post private if not admin", async function(){
+
+        const [ owner, secondAccount, thirdAccount, fifthAccount] = await ethers.getSigners();
+        await expect(contract.connect(fifthAccount).makeReportedPrivate(6)).to.be.reverted;
+    })
+        
+    
+})
+
+
+

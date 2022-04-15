@@ -184,7 +184,6 @@ const checkModerator = async(addr) => {
   
  try {
    const result = await contract.checkMod(addr);
-  console.log(result)
   return result
   }
  catch(error){
@@ -239,7 +238,7 @@ const pauseContract = async(id) => {
   const contract = createEthereumContract();
   
  try {
-   const  result =await contract.pause()();
+   const  result =await contract.pause();
   
   return result
   }
@@ -253,7 +252,7 @@ const unPauseContract = async(id) => {
   const contract = createEthereumContract();
   
  try {
-   const  result =await contract.unpause()();
+   const  result =await contract.unpause();
   
   return result
   }

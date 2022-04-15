@@ -1,10 +1,14 @@
-import React from "react";
+import React, {useContext} from "react";
 import "./css/Hero.css";
 import Picture from "../Picture/Picture";
 import Article from "../Article/Article";
 import Form from "../Form/Form";
+import { ConnectContext } from "../../context/ConnectContext";
 
 export default function Hero(props) {
+  const { currentAccount, connectWallet } = useContext(ConnectContext);
+
+
   return (
     <div
       className={
@@ -28,7 +32,7 @@ export default function Hero(props) {
               "Store your public and private books, audiobooks, articles on the blockchain. Access them wherever you need, share and collaborate with friends, family and co-workers.",
             ]}
           />
-          <button className="button">Get Started</button>
+          {!currentAccount ? <button className="button" onClick={connectWallet}>Get Started</button> : ""}
         </div>
       </article>
     </div>

@@ -3,6 +3,7 @@ import Header from "../Header/Header";
 import './userprivatefiles.css'
 import {Link} from "react-router-dom";
 import UserFiles from '../UserFiles/UserFiles'
+import SideBar from "../SideBar/SideBar";
 
 
 import { ConnectContext } from "../../context/ConnectContext";
@@ -82,30 +83,7 @@ function UserPrivateFiles() {
                 <div className="col-md-3">
                     <div className="sidebar p-3">
 
-                        <Link className="link p-3 mb-3" to="/dashboard-admins">
-                            Admins
-                        </Link>
-                        <Link className="link p-3 mb-3" to="/dashboard-add-files">
-                            Add Files
-                        </Link>
-                        <Link className="link p-3 mb-3" to="/dashboard-public-files">
-                            Public Files
-                        </Link>
-                        <Link className="link p-3 mb-3" to="/dashboard-private-files">
-                            Private Files
-                        </Link>
-                        <Link className="link p-3 mb-3" to="/dashboard-reported-files">
-                            Reported Files
-                        </Link>
-                        <Link className="link p-3 mb-3" to="/dashboardreported-users">
-                            Reported Users
-                        </Link>
-                        <Link className="link p-3 mb-3" to="/dashboard-blacklisted-users">
-                            Blacklisted Users
-                        </Link>
-                        <button className="btn btn-primary btn-large ms-3" >
-                            Disconnect
-                        </button>
+                        <SideBar/>
                     </div>
                 </div>
                 <div className="col-md-9">
