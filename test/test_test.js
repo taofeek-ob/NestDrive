@@ -25,9 +25,12 @@ describe("NestCoin", function(){
 });
 
 
+
+
 describe("Upload Files", function(){
     it("should be able to upload a public file to the contract", async function(){
         const [ owner, secondAccount, thirdAccount] = await ethers.getSigners();
+        //Upload File 
         uploadFile = await contract.connect(owner).uploadFile(
             "QmZxQhLnHgHj3UZjnsZTLQC3Q7UCJAU7iN7htU6q9NNwnb",
             "500kb",
@@ -36,6 +39,7 @@ describe("Upload Files", function(){
             "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.",
             true
         );
+        // Expect the function to go through
         const txResult = await uploadFile.wait();
         expect(txResult.status).to.equal(1);
 
@@ -46,6 +50,7 @@ describe("Upload Files", function(){
      
     it("should  be able to upload a private file to contract since length of type is 0", async function(){
         const [ owner, secondAccount, thirdAccount] = await ethers.getSigners();
+         //Upload File 
         uploadFile = await contract.connect(owner).uploadFile(
             "QmZxQhLnHgHj3UZjnsZTLQC3Q7UCJAU7iN7htU6q9NNwnb",
             "500kb",
@@ -54,6 +59,7 @@ describe("Upload Files", function(){
             "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.",
             false
         );
+        // Expect the function to go through
         const txResult = await uploadFile.wait();
         expect(txResult.status).to.equal(1);
         
@@ -61,6 +67,7 @@ describe("Upload Files", function(){
 
     it("should not be able to upload a file to contract since length of hash is 0", async function(){
         const [ owner, secondAccount, thirdAccount] = await ethers.getSigners();
+        // Expect the function not to go through 
         await expect(contract.connect(owner).uploadFile(
             "",
             "500kb",
@@ -529,13 +536,6 @@ describe("Moderator Assigning and Removal, Check Moderator", function(){
         await contract.connect(owner).assignMod(secondAccount.address);
         const checkMod = await contract.connect(owner).checkMod(secondAccount.address);
         expect(checkMod).to.be.equal(true);
-    })
-
-    it("Should be able to check for  moderator ", async function(){
-        const [ owner, secondAccount, thirdAccount, fourthAccount] = await ethers.getSigners();
-        await contract.connect(owner).unpause();
-        const checkMod = await contract.connect(owner).checkMod(thirdAccount.address);
-        expect(checkMod).to.be.equal(false);
     })
 
     it("Should not be able to check for  moderator if contract is paused  ", async function(){
