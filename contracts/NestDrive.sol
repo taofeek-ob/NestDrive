@@ -29,14 +29,14 @@ contract NestDrive is Pausable {
     /// @dev mapping outlining all files created in a state variable `Allfiles`
     mapping(uint => File) public Allfiles;
 
-    /// @notice emits a notice when a new file is uploaded
-    /// @dev emit an event containing all the file details when file is uploaded
-
-    /// @dev mapping of blacklisted addresses
+    /// @notice mapping of blacklisted addresses
     mapping(address => bool) public blackListedAddresses;
 
+    /// @notice array of reported file id
     uint[] public reportedFiles;
 
+    /// @notice emits a notice when a new file is uploaded
+    /// @dev emit an event containing all the file details when file is uploaded
     event FileUploaded(
         uint fileId,
         string fileHash,
@@ -49,10 +49,12 @@ contract NestDrive is Pausable {
         bool isPublic
     );
 
-    /// @notice Emit event when a new moderator is assigned
+    /// @notice Notification when a moderator is assigned
+    /// @dev Emit event when a new moderator is assigned
     event AssignMod(address adder, address newMod);
 
-    /// @notice Emit event when a moderator is removed
+    /// @notice Notification when a moderator is removed
+    /// @dev Emit event when a moderator is removed
     event RemoveMod(address remover, address newMod);
 
     /// @notice Ensure that only a moderator can call a specific function.
@@ -63,7 +65,7 @@ contract NestDrive is Pausable {
         _;
     }
 
-    /// @dev modifier to check address is not blacklisted
+    /// @notice modifier to check address is not blacklisted
     modifier isNotBlacklisted() {
         require(
             blackListedAddresses[msg.sender] == false,
@@ -92,8 +94,12 @@ contract NestDrive is Pausable {
         string memory _fileType,
         string memory _fileName,
         string memory _fileDescription,
-        bool _isPublic
-    ) public whenNotPaused isNotBlacklisted {
+        bool _isPublic    
+    ) 
+    /// @dev check to ensure that the uploader is not blacklisted
+    /// @dev check to ensure the coontract is not paused
+
+    public whenNotPaused isNotBlacklisted {
         /// @dev Make sure the file hash exists
         require(bytes(_fileHash).length > 0);
 
@@ -108,14 +114,15 @@ contract NestDrive is Pausable {
 
         /// @dev Make sure uploader address exists
         require(msg.sender != address(0));
-        // Make sure file size is more than 0
+
+        /// @dev Make sure file size is more than 0
         require(bytes(_fileSize).length > 0);
 
         /// @dev Increment file id
         _itemIds.increment();
         uint currentfileId = _itemIds.current();
 
-        /// @notice Add File to the contract
+        /// @notice Add a File to the contract
         Allfiles[currentfileId] = File(
             currentfileId,
             _fileHash,
@@ -143,13 +150,15 @@ contract NestDrive is Pausable {
         );
     }
 
-    /// @dev Only the uploader can change file visibility
+    /// @notice Only the uploader can change public file visibility to private
+    /// @dev file visibility can be changed when file is not blacklisted or contract is paused
     function makeFilePrivate(uint fileId)
         public
         whenNotPaused
         isNotBlacklisted
     {
         /// @notice ensure that the uploader can change file visibility
+        /// @dev Check to ensure that the person changing visibility of the file is the uploader or a moderator
         require(
             Allfiles[fileId].uploader == msg.sender || moderator[msg.sender],
             "you can only manipulate your own file"
@@ -162,9 +171,11 @@ contract NestDrive is Pausable {
         _itemsPrivate.increment();
     }
 
-    /// @dev Only the uploader can change file visibility
+    /// @notice Only the uploader can change a private file visibility to public
+    /// @dev file visibility can be changed when the file is not blacklisted
+    /// @dev file visibility can be changed if the contract is not paused
     function makeFilePublic(uint fileId) public whenNotPaused isNotBlacklisted {
-        /// @notice ensure that the uploader can change file visibility
+        
         require(
             Allfiles[fileId].uploader == msg.sender,
             "you can only manipulate your own file"
@@ -186,6 +197,7 @@ contract NestDrive is Pausable {
         returns (File[] memory)
     {
         /// @notice total number of items ever created
+        /// @return list of all uploads
         uint totalFiles = _itemIds.current();
 
         uint publicFilesID = _itemIds.current() - _itemsPrivate.current();
@@ -194,7 +206,11 @@ contract NestDrive is Pausable {
         File[] memory items = new File[](publicFilesID);
 
         /// @notice Loop through all items ever created
-        for (uint i = 0; i < totalFiles; i++) {
+        for (
+            uint i = 0;
+            i < totalFiles;
+            i++) {
+            
             /// @notice Get only public item
             if (Allfiles[i + 1].isPublic == true) {
                 uint currentId = Allfiles[i + 1].fileId;
@@ -206,7 +222,8 @@ contract NestDrive is Pausable {
         return items;
     }
 
-    /// @dev function to  fetch only files uploaded by the user
+    /// @notice function to  fetch only files uploaded by the user
+    /// @return list of items uploaded by the user
     function fetchUserFiles()
         public
         view
@@ -292,17 +309,21 @@ contract NestDrive is Pausable {
         emit RemoveMod(msg.sender, _mod);
     }
 
+    /// @notice Add option to report a file
     function report(uint fileId) public {
         reportedFiles.push(fileId);
     }
 
+    /// @dev Option for moderator to remove a reported file
     function clearReportedFiles(uint fileId) public isMod(msg.sender) {
-        /// @notice set status of file to private
+        
+        /// @notice check that the files returned are private
         Allfiles[fileId].isPublic = false;
 
         /// @dev increase count of private files
         _itemsPrivate.increment();
-        ///@dev empty array of reported files
+        
+        ///@dev clear array of reported files
         delete reportedFiles;
     }
 }
