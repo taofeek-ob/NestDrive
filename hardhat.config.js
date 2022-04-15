@@ -38,10 +38,6 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
       url: process.env.ALCHEMY_API_URL,
       accounts: [process.env.METAMASK_KEY],
     },
-    rinkeby: {
-      url: process.env.ALCHEMY_API_URL,
-      accounts: [process.env.METAMASK_KEY],
-    },
   },
   etherscan: {
     apiKey: process.env.ETHERSCAN_KEY,
