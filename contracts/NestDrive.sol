@@ -290,7 +290,7 @@ contract NestDrive is Pausable {
     function clearReportedFiles(uint fileId) public isMod(msg.sender) {
         /// @notice set status of file to private
         Allfiles[fileId].isPublic = false;
-
+        
         /// @dev increase count of private files
         _itemsPrivate.increment();
         ///@dev empty array of reported files

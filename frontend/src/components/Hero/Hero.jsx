@@ -39,12 +39,12 @@ export default function Hero(props) {
             section="hero"
             headingType="heading"
             isdarkThemeActive={props.isdarkThemeActive}
-            heading="NestDrive, Your Decentralized Online Library.
-            Also note that files with innapropriate content will be flagged when noticed."
+            heading="NestDrive, Your One Decentralized Online Library."
            
             paragraph={[
-              "Store your public and private books, audiobooks, articles on the blockchain. Access them wherever you need, share and collaborate with friends, family and co-workers.",
+              "Store your public and private books, audiobooks, articles on the blockchain. Access them wherever you need, share and collaborate with friends, family and co-workers. Note that files with inappropriate content will be flagged.",
             ]}
+            
           />
           {!currentAccount ? (
             <button className="button" onClick={connectWallet}>
