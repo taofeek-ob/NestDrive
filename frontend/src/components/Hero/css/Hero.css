@@ -42,32 +42,18 @@
 /*# sourceMappingURL=Hero.css.map */
 
 .button {
-  padding: 2rem 1.5rem;
-  position: relative;
-  left: 30px;
+  padding: 1rem 1.5rem;
   font-size: 1rem;
   font-family: "Raleway", sans-serif;
   font-weight: 700;
   -webkit-box-flex: 1;
       -ms-flex: 1;
-          flex: 2;
+          flex: 1;
   margin-left: 2rem;
   background-color: #3065f8;
   border: 1px solid #3065f8;
   border-radius: 100rem;
   color: white;
-  -webkit-transition: 300ms ease-out;
-  transition: 300ms ease-out;
-}
-
-.butto {
- 
-  font-family: "Raleway", sans-serif;
- 
-
-  border-radius: 0.3rem;
-  background-color: #2f2f2f;
-  color: #ffffff;
   -webkit-transition: 300ms ease-out;
   transition: 300ms ease-out;
 }

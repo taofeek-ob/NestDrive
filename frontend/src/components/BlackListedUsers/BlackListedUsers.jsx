@@ -1,12 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
+import { ethers } from "ethers";
+import { contractABI, contractAddress } from "../utilities/constants";
 import Header from "../Header/Header";
 import './blacklistedusers.css'
 import {Link} from "react-router-dom";
 
-
+import { ConnectContext } from "../../context/ConnectContext";
 
 
 function BlackListedUsers() {
+  const {fetchAll, reportedList, remFrmBlacklist, blackList } = useContext(ConnectContext);
+
+  const[Files, setFiles] =useState([])
 
   let [darkThemeActive, setDarkThemeActive] = useState(false);
 
@@ -39,8 +44,51 @@ function BlackListedUsers() {
       lastScrolled = scrolled;
     });
   });
-
+  const report=async()=>{
  
+const fl= await blackList()
+
+
+
+
+
+
+
+setFiles(fl)
+
+  }
+
+ useEffect(()=>{
+  report()
+console.log(Files)
+ },[]
+ 
+ )
+ 
+ useEffect(() => {
+  let NestDriveContract;
+
+  const onremInBlackList = (addr) => {
+    console.log("remInBlackList", addr);
+    alert( addr + "has been removed from blacklist")
+  
+  };
+  
+
+  if (window.ethereum) {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+
+    NestDriveContract = new ethers.Contract(contractAddress, contractABI, signer);
+    NestDriveContract.on("remInBlackList", onremInBlackList);
+  }
+
+  return () => {
+    if (NestDriveContract) {
+      NestDriveContract.off("remInBlackList", onremInBlackList);
+    }
+  };
+}, []);
 
   return (
     <div>
@@ -91,22 +139,21 @@ function BlackListedUsers() {
                                     <th scope="col">Actions</th>
                                 </tr>
                             </thead>
+
+                            
                             <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>0x9F6Dd51f7a18Ce5D6FaFF9e5d3e5764Cca61cC44</td>
-                                    <td><button className="btn btn-lg btn-success">Revoke User</button></td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">2</th>
-                                    <td>0x9F6Dd51f7a18Ce5D6FaFF9e5d3e5764Cca61cC44</td>
-                                    <td><button className="btn btn-lg btn-success">Revoke User</button></td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>0x9F6Dd51f7a18Ce5D6FaFF9e5d3e5764Cca61cC44</td>
-                                    <td><button className="btn btn-lg btn-success">Revoke User</button></td>
-                                </tr>
+                            {Files.map((address, key)=>{
+                                return(
+                                  <tr>
+                                  <th scope="row">{key+1}</th>
+                                  <td>{address}</td>
+                                  <td><button className="btn btn-lg btn-success" onClick={()=>remFrmBlacklist((address.toString()))}>Revoke User</button></td>
+                              </tr>
+                                )
+                                
+
+                              })}
+                               
                             </tbody>
                         </table>
                     </div>

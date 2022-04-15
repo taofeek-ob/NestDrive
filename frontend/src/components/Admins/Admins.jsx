@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Header from "../Header/Header";
 import './admin.css'
 import {Link} from "react-router-dom";
 
-
+import { ConnectContext } from "../../context/ConnectContext";
 
 
 function Admins() {
-
+  const {makeMod, remMod } = useContext(ConnectContext);
   let [darkThemeActive, setDarkThemeActive] = useState(false);
 
   function switchActiveTheme() {
@@ -112,6 +112,7 @@ function Admins() {
                             </tbody>
                         </table>
                     </div>
+                    
                 </div>
             </div>
         </div>
