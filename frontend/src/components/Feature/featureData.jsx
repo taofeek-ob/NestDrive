@@ -25,7 +25,7 @@ const featureData = [
     img: "folder-illustration.svg",
     heading: "Store any type of file",
     paragraph:
-      "Whether you're sharing holidays photos or work documents, NestDrive has you covered allowing for all file types to be securely stored and shared.",
+      "Whether you're sharing holidays photos or work documents, Fylo has you covered allowing for all file types to be securely stored and shared.",
   },
 ];
 
