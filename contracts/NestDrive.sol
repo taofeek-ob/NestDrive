@@ -29,14 +29,23 @@ contract NestDrive is Pausable {
     /// @dev mapping outlining all files created
     mapping(uint => File) public Allfiles;
 
-    /// @notice emits a notice when a new file is uploaded
-    /// @dev emit an event containing all the file details when file is uploaded
+   
 
     /// @dev mapping of blacklisted addresses
     mapping(address => bool) public blackListedAddresses;
 
-    uint[] public reportedFiles;
+/// @notice stores the list of blacklisted addresses
+address[] public blackList;
 
+/// @dev mapping of blacklisted addresses index
+mapping(address=> uint) indexOfblackList;
+//
+    uint[] public reportedFiles;
+    mapping(uint=>uint) indexOfreportedFiles;
+    mapping(uint => bool) public reportExist;
+
+ /// @notice emits a notice when a new file is uploaded
+    /// @dev emit an event containing all the file details when file is uploaded
     event FileUploaded(
         uint fileId,
         string fileHash,
@@ -57,12 +66,42 @@ contract NestDrive is Pausable {
     /// @dev Emit event when a moderator is removed
     event RemoveMod(address remover, address newMod);
 
+    /// @notice Notification when a address is blacklisted
+    /// @dev Emit event when a new address is blacklisted
+    event addInBlackList(address addr);
+
+
+    /// @notice Notification when a blacklisted address is removed
+    /// @dev Emit event when a blacklisted address is removed
+    event remInBlackList(address addr);
+
+ /// @notice Notification when a file is reported
+    /// @dev Emit event when a file  is reported
+    event newReport(uint _itemIds);
+
+    /// @notice Notification when a user makes their file private
+    /// @dev Emit event when a user makes their file private
+    event madePrivate(uint _itemIds);
+
+    /// @notice Notification when a user makes their file public
+    /// @dev Emit when a user makes their file public
+    event madePublic(uint _itemIds);
+
+    /// @notice Notification when a moderator makes a file private as penalty
+    /// @dev Emit event when a moderator makes a file private as penalty
+    event madePrivateMod(uint _itemIds);
+
+
+
+
     /// @dev modifier to ensure only moderators can call selected functions.
     modifier isMod(address _user) {
         bool ismod = moderator[_user];
         require(ismod, "Only Moderators Have Access!");
         _;
     }
+
+  
 
     /// @dev modifier to check address is not blacklisted
     modifier isNotBlacklisted() {
@@ -85,6 +124,7 @@ contract NestDrive is Pausable {
         address uploader;
         bool isPublic;
     }
+   
 
     /// @notice Function to upload a file
     function uploadFile(
@@ -151,7 +191,7 @@ contract NestDrive is Pausable {
     {
         /// @notice ensure that the uploader can change file visibility
         require(
-            Allfiles[fileId].uploader == msg.sender || moderator[msg.sender],
+            Allfiles[fileId].uploader == msg.sender,
             "you can only manipulate your own file"
         );
 
@@ -160,14 +200,54 @@ contract NestDrive is Pausable {
 
         /// @dev increase count of private files
         _itemsPrivate.increment();
+
+        /// @notice emit when a user fmakes their file from private
+        emit madePrivate(fileId);
+    }
+
+
+
+    /// @dev Only the uploader can change file visibility
+    function makeReportedPrivate(uint fileId)
+        public
+        whenNotPaused
+        isNotBlacklisted
+    {
+        /// @notice ensure that the moderator can change file visibility
+        require(
+             moderator[msg.sender],
+            "only admin can call this"
+        );
+
+        /// @notice make files private
+        Allfiles[fileId].isPublic = false;
+
+        uint index = indexOfreportedFiles[fileId];
+         reportedFiles[index] = reportedFiles[reportedFiles.length-1];
+        
+  reportedFiles.pop();
+
+
+        /// @dev increase count of private files
+        _itemsPrivate.increment();
+
+        /// @notice emit when a moderator makes a file private as penalty
+        emit madePrivateMod(fileId);
     }
 
     /// @dev Only the uploader can change file visibility
     function makeFilePublic(uint fileId) public whenNotPaused isNotBlacklisted {
         /// @notice ensure that the uploader can change file visibility
+       
         require(
             Allfiles[fileId].uploader == msg.sender,
             "you can only manipulate your own file"
+        );
+
+        /// @notice ensure that the reported files can not be made puvlic after penalty
+          require(
+            reportExist[fileId] == false,
+            "File has been blacklisted for violation, and cannot be made public."
         );
 
         /// @notice make file public
@@ -175,6 +255,9 @@ contract NestDrive is Pausable {
 
         /// @dev Increment public files
         _itemIds.increment();
+
+        /// @notice emit when a user makes their file public
+        emit madePublic(fileId);
     }
 
     /// @notice Function to retrieve all public files
@@ -206,6 +289,7 @@ contract NestDrive is Pausable {
 
         return items;
     }
+    
 
     /// @dev function to  fetch only files uploaded by the user
     function fetchUserFiles()
@@ -254,7 +338,12 @@ contract NestDrive is Pausable {
         returns (bool)
     {
         blackListedAddresses[_addr] = true;
+        blackList.push(_addr);
+
+        /// @notice emit when a address is blacklisted
+        emit addInBlackList(_addr);
         return true;
+        
     }
 
     ///@dev function to remove an address from the blacklist
@@ -263,8 +352,39 @@ contract NestDrive is Pausable {
         isMod(msg.sender)
         returns (bool)
     {
+
+          uint index = indexOfblackList[_addr];
+         blackList[index] = blackList[blackList.length-1];
+        
+  blackList.pop();
         blackListedAddresses[_addr] = false;
+
+        /// @notice emit when a address is removed from blacklist
+        emit remInBlackList(_addr);
         return true;
+
+
+    }
+
+ /// @dev function to  fetch only all blacklisted addresses
+
+ function blackListArray()
+      public  view
+        isMod(msg.sender)
+        returns (address[] memory)
+    {
+        
+        return blackList;
+    }
+
+     ///@dev function to return an array of  reported Files using fileId
+    function reportedListArray()
+      public  view
+        isMod(msg.sender)
+        returns (uint[] memory)
+    {
+        
+        return reportedFiles;
     }
 
     /// @notice add a new moderator
@@ -279,13 +399,32 @@ contract NestDrive is Pausable {
     function removeMod(address _mod) public whenNotPaused isMod(msg.sender) {
          moderator[_mod] = false;
 
-        /// Emit event when a moderator has been removed
+        /// @notice Emit event when a moderator has been removed
         emit RemoveMod(msg.sender, _mod);
     }
 
-    function report(uint fileId) public {
-        reportedFiles.push(fileId);
+ /// @dev function to  check if a connected user is a moderatore for mod's features visibility
+     function checkMod(address _user) public view whenNotPaused isMod(msg.sender)  returns(bool){
+         bool ismod = moderator[_user];
+return ismod;
+        
+       
     }
+
+ /// @dev function to  report a file a user
+    function report(uint fileId) public {
+         require(
+            reportExist[fileId] == false,
+            "File has been reported earlier."
+        );
+        reportExist[fileId]= true;
+    reportedFiles.push(fileId);
+    /// @notice emit when a file is reported
+        emit newReport(fileId);
+  }
+
+        
+    
 
     function clearReportedFiles(uint fileId) public isMod(msg.sender) {
         /// @notice set status of file to private
