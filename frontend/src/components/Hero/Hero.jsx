@@ -52,7 +52,7 @@ export default function Hero(props) {
             </button>
           ) : (
             <span className="button">
-              Signed in as: <Link to="/dashboard">{shortenedAddress}</Link>
+              Signed in as: <button className="butto" to="/dashboard">{shortenedAddress}</button>
             </span>
           )}
         </div>
