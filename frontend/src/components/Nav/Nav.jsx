@@ -47,7 +47,7 @@ function Nav(props) {
                     onClick={connectWallet}>Connect Wallet</a>
                 :(
                     <span className="nav-item">
-                    Signed in as: <Link to="/dashboard">{shortenedAddress}</Link>
+                    Profile: <Link to="/dashboard">{shortenedAddress}</Link>
                     </span>
                 )
                 }

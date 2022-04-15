@@ -1,15 +1,31 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Header from "../Header/Header";
 import './userpublicfiles.css'
 import {Link} from "react-router-dom";
-import File from '../File/File'
+import UserFiles from '../UserFiles/UserFiles'
 
-
+import { ConnectContext } from "../../context/ConnectContext";
 
 
 function UserPublicFiles() {
 
+  const {fetchPrivate } = useContext(ConnectContext);
   let [darkThemeActive, setDarkThemeActive] = useState(false);
+  const[Files, setFiles] =useState([])
+
+
+  const fetch =async()=>{
+   
+
+    const pubFiles = await fetchPrivate()
+    setFiles(pubFiles)
+  
+     } 
+  
+     useEffect(()=>{
+      fetch()
+     },[])
+
 
   function switchActiveTheme() {
     if (darkThemeActive) {
@@ -42,8 +58,10 @@ function UserPublicFiles() {
   });
 
   const children = [];  
-  for(let i = 0;i < 25;i++) {
-    children.push(<File isdarkThemeActive={darkThemeActive}/>);
+  const newFile= Files.slice().sort(function(a, b){return b.uploadTime - a.uploadTime})
+ const newer= newFile.filter(function(el){return el.isPublic===true})
+  for(let i = 0;i < newer.length;i++) {
+    children.push(<UserFiles public={newer[i]} isdarkThemeActive={darkThemeActive}/>);
   }
 
  
