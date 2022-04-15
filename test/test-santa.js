@@ -81,17 +81,12 @@ describe("Moderators() and file Restriction (blacklist,access controls)", functi
        
     })
     it("Should be able to retrive moderators addresses",async function(){
+        ///@dev Should not be able to view blacklisted if not a moderator
         const [ owner, secondAccount, thirdAccount] = await ethers.getSigners();
         console.log('\t',"Attempting Getting moderators addresses by a moderator");
         checkMod = await fileDrive.connect(owner).checkMod("0x5444c30210d8a0a156178cfb8048b4137c0d40d1");
         console.log("this is checkmod",checkMod)
-        // expect(checkMod).to.equal(false);
-        console.log('\t',"Passed...");
-
-        ///@dev Should not be able to view blacklisted if not a moderator
-        console.log('\t'," Getting reported addresses by a non moderator");
-         await expect(fileDrive.connect(secondAccount).checkMod("0x5444c30210d8a0a156178cfb8048b4137c0d40d1")).to.be.revertedWith("Only Moderators Have Access!");
-        
+        expect(checkMod).to.equal(false);
         console.log('\t',"Passed...");
        
     })

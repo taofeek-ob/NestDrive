@@ -225,7 +225,7 @@ mapping(address=> uint) indexOfblackList;
         uint index = indexOfreportedFiles[fileId];
          reportedFiles[index] = reportedFiles[reportedFiles.length-1];
         
-  reportedFiles.pop();
+        reportedFiles.pop();
 
 
         /// @dev increase count of private files
@@ -404,9 +404,9 @@ mapping(address=> uint) indexOfblackList;
     }
 
  /// @dev function to  check if a connected user is a moderatore for mod's features visibility
-     function checkMod(address _user) public view whenNotPaused isMod(msg.sender)  returns(bool){
+     function checkMod(address _user) public view whenNotPaused returns(bool){
          bool ismod = moderator[_user];
-return ismod;
+        return ismod;
         
        
     }
@@ -429,7 +429,7 @@ return ismod;
     function clearReportedFiles(uint fileId) public isMod(msg.sender) {
         /// @notice set status of file to private
         Allfiles[fileId].isPublic = false;
-
+        
         /// @dev increase count of private files
         _itemsPrivate.increment();
         ///@dev empty array of reported files

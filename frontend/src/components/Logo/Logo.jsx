@@ -5,17 +5,16 @@ import { Link } from 'react-router-dom';
 function Logo(props) {
   let img;
   if (props.dark) {
-    img = "images/logo.png";
+    img = "image-dark-theme/logo.svg";
   } else {
-    img = "images/logo.png";
+    img = "image-light-theme/logo.svg";
   }
 
   return (
     <picture className="logo">
-      <Link to="/">
-      <img src={img} alt="logo of website" /> <span className="brand"> NestDrive</span>
-        
-      </Link>
+      <a href="/">
+        <img src={img} alt="logo of website" />
+      </a>
     </picture>
   );
 }

@@ -4,12 +4,13 @@ import './addadmin.css'
 import {Link} from "react-router-dom";
 import { ethers } from "ethers";
 import { contractABI, contractAddress } from "../utilities/constants";
+import SideBar from "../SideBar/SideBar";
 
 import { ConnectContext } from "../../context/ConnectContext";
 
 
 function AddAdmin() {
-  const {makeMod, remMod, pauseContract, unpauseContract } = useContext(ConnectContext);
+  const {makeMod, remMod, pauseContract, unPauseContract } = useContext(ConnectContext);
   const[address, setAddress] =useState("")
   let [darkThemeActive, setDarkThemeActive] = useState(false);
 
@@ -110,31 +111,7 @@ function AddAdmin() {
             <div className="row">
                 <div className="col-md-3">
                     <div className="sidebar p-3">
-
-                    <Link className="link p-3 mb-3" to="/dashboard-admins">
-                            Admins
-                        </Link>
-                        <Link className="link p-3 mb-3" to="/dashboard-add-files">
-                            Add Files
-                        </Link>
-                        <Link className="link p-3 mb-3" to="/dashboard-public-files">
-                            Public Files
-                        </Link>
-                        <Link className="link p-3 mb-3" to="/dashboard-private-files">
-                            Private Files
-                        </Link>
-                        <Link className="link p-3 mb-3" to="/dashboard-reported-files">
-                            Reported Files
-                        </Link>
-                        <Link className="link p-3 mb-3" to="/dashboard-reported-users">
-                            Reported Users
-                        </Link>
-                        <Link className="link p-3 mb-3" to="/dashboard-blacklisted-users">
-                            Blacklisted Users
-                        </Link>
-                        <button className="btn btn-primary btn-large ms-3" >
-                            Disconnect
-                        </button>
+                      <SideBar/>
                     </div>
                 </div>
                 <div className="col-md-9">
@@ -148,15 +125,15 @@ function AddAdmin() {
                             <input type="text" class="form-control" id="inputAddress" placeholder="Enter Address" onChange={(e)=>setAddress(e.target.value)}/>
                         </div>
                         <div class="col-12">
-                            <button type="submit" class="btn btn-primary mr-7" onClick={()=> handleAdd}>Add Moderators</button>
-                           {"     "}   {"     "}  <button type="submit" class=" pl-9 btn btn-warning"  onClick={()=> handleRemove}>Remove Moderators</button>
+                            <button type="submit" class="btn btn-primary mr-7" onClick={handleAdd}>Add Moderators</button>
+                           {"     "}   {"     "}  <button type="submit" class=" pl-9 btn btn-warning"  onClick={handleRemove}>Remove Moderators</button>
                         </div>
                         </form>
                     </div>
                     <br/><br />
                    
-                    <br/><br /><button  className="btn btn-lg btn-success" onClick={()=>unpauseContract}>Restart Contract</button> <br/><br />
-                    <button  className="btn btn-lg btn-danger" onClick={()=>pauseContract}>Pause Contract</button> 
+                    <br/><br /><button  className="btn btn-lg btn-success" onClick={unPauseContract}>Restart Contract</button> <br/><br />
+                    <button  className="btn btn-lg btn-danger" onClick={pauseContract}>Pause Contract</button> 
                    
                 </div>
             </div>

@@ -6,6 +6,7 @@ import { ethers } from "ethers";
 import { contractABI, contractAddress } from "../utilities/constants";
 import { Form, Button, Badge, ProgressBar, Container } from 'react-bootstrap';
 import { create as ipfsHttpClient } from "ipfs-http-client";
+import SideBar from "../SideBar/SideBar";
 
 import { ConnectContext } from "../../context/ConnectContext";
 const ipfs = ipfsHttpClient("https://ipfs.infura.io:5001/api/v0");
@@ -181,31 +182,7 @@ useEffect(() => {
             <div className="row">
                 <div className="col-md-3">
                     <div className="sidebar p-3">
-
-                    <Link className="link p-3 mb-3" to="/dashboard-admins">
-                            Admins
-                        </Link>
-                        <Link className="link p-3 mb-3" to="/dashboard-add-files">
-                            Add Files
-                        </Link>
-                        <Link className="link p-3 mb-3" to="/dashboard-public-files">
-                            Public Files
-                        </Link>
-                        <Link className="link p-3 mb-3" to="/dashboard-private-files">
-                            Private Files
-                        </Link>
-                        <Link className="link p-3 mb-3" to="/dashboard-reported-files">
-                            Reported Files
-                        </Link>
-                        <Link className="link p-3 mb-3" to="/dashboard-reported-users">
-                            Reported Users
-                        </Link>
-                        <Link className="link p-3 mb-3" to="/dashboard-blacklisted-users">
-                            Blacklisted Users
-                        </Link>
-                        <button className="btn btn-primary btn-large ms-3" >
-                            Disconnect
-                        </button>
+                      <SideBar/>
                     </div>
                 </div>
                 <div className="col-md-9">

@@ -10,7 +10,7 @@ import { ConnectContext } from "../../context/ConnectContext";
 
 
 function FilePreview() {
-  const {currentAccount, checkMod, fetchAll, reportFile } = useContext(ConnectContext);
+  const {currentAccount, checkMod, fetchAll, reportFile, checkModerator, makePrivate, takeAction } = useContext(ConnectContext);
   const[Files, setFiles] =useState([])
 
   let [darkThemeActive, setDarkThemeActive] = useState(false);
@@ -38,11 +38,17 @@ function FilePreview() {
      const handleReport =async()=>{
    
 
-      const result= await reportFile(id)
+      const result = await reportFile(id)
      
     
     
        } 
+
+    
+
+    const isAdmin = checkModerator(currentAccount);
+
+
   useEffect(()=>{
     fetch()
   }, [])
@@ -68,7 +74,7 @@ function FilePreview() {
   });
 
   const isMod =async()=>{
-    const result=  await checkMod(currentAccount) //
+    const result=  await checkModerator(currentAccount) //
     console.log(result)
   }
  useEffect(()=>{
@@ -93,7 +99,7 @@ isMod()
     NestDriveContract = new ethers.Contract(contractAddress, contractABI, signer);
     NestDriveContract.on("newReport", onnewReport);
   }
-
+  
   return () => {
     if (NestDriveContract) {
       NestDriveContract.off("newReport", onnewReport);
@@ -111,13 +117,13 @@ isMod()
           <div className="row">
               <div className="col-12 col-md-6">
                 <h3>{Files.fileName}</h3>
-                <small>created by <Link to="/profile">{Files.uploader}</Link></small>
+                <small>created by <a href={"https://etherscan.io/address/" + Files.uploader}>{Files.uploader}</a></small>
                 <br/><br/>
                 <p>{Files.fileDescription}</p>
                 <p className="card-text"><small className="text-muted">Uploaded on  {moment.unix(Files.uploadTime).format("Do MM YYYY")}</small></p>
                 <img alt="" src={"https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://ipfs.infura.io/ipfs/"  + Files.fileHash}></img>
                 <div  className="mt-2">
-                    <button className="btn btn-small btn-primary me-1"><a href={"http://www.twitter.com/share?check out " + Files.fileName + "url=https://ipfs.infura.io/ipfs/" + Files.fileHash} className="imp" data-action="share/whatsapp/share">Share File</a></button>
+                    <button className="btn btn-small btn-primary me-1"><a href={"http://www.twitter.com/share?text=check out " + Files.fileName + "&url=https://ipfs.infura.io/ipfs/" + Files.fileHash} className="imp" data-action="share/whatsapp/share">Share File</a></button>
                     <button className="btn btn-small btn-warning me-1" onClick={()=>handleReport(Number(Files.fileId))}>Report File</button>
                     <button className="btn btn-small btn-success"><a href={"https://ipfs.infura.io/ipfs/" + Files.fileHash} className="imp" download={Files.fileName + "from NestDrive"} >Download File</a></button>
                 </div>
