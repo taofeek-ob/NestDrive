@@ -47,11 +47,6 @@ mapping(address=> uint) indexOfblackList;
  /// @notice emits a notice when a new file is uploaded
     /// @dev emit an event containing all the file details when file is uploaded
 
-    /// @dev mapping of blacklisted addresses
-    mapping(address => bool) public blackListedAddresses;
-
-    uint[] public reportedFiles;
-
     event FileUploaded(
         uint fileId,
         string fileHash,
