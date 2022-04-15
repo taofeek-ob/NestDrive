@@ -23,7 +23,7 @@ return (
                 <div className="row form">
                     <label className="col-sm-2 col-form-label col-form-label-lg">Search Here?</label>
                     <div className="col-sm-10">
-                        <input type="text" className={inputstuff} id="colFormLabelLg" placeholder="Enter your Search"/>
+                        <input type="text" className={inputstuff} id="colFormLabelLg" placeholder="Enter your Search" onChange={(e)=>props.setQuery(e.target.value)}/>
                     </div>
                 </div>
                 </div>

@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Header from "../Header/Header";
 import SearchFiles from "../SearchFiles/SearchFiles";
 import File from "../File/File";
-
+import { ConnectContext } from "../../context/ConnectContext";
 
 function PublicFiles() {
+  const {fetchPublic } = useContext(ConnectContext);
+  const [query, setQuery] = useState("")
+  const[Files, setFiles] =useState([])
 
   let [darkThemeActive, setDarkThemeActive] = useState(false);
 
@@ -17,6 +20,18 @@ function PublicFiles() {
       document.querySelector("#root").style.backgroundColor = "#1C2431";
     }
   }
+
+  const fetch =async()=>{
+   
+
+  const pubFiles = await fetchPublic()
+  setFiles(pubFiles)
+
+   } 
+
+   useEffect(()=>{
+    fetch()
+   },[])
 
   useEffect(() => {
     let headerFixedContainer = document.querySelector(".header-fixed");
@@ -37,10 +52,28 @@ function PublicFiles() {
       lastScrolled = scrolled;
     });
   });
+  const filteredData = Files.filter((el) => {
+    //if no input the return the original
+    if (query === '') {
+        return el;
+    }
+    //return the item which contains the user input
+    else {
+        return el.fileName.toLowerCase().includes(query.toLowerCase())
+    }
+})
 
   const children = [];  
-  for(let i = 0;i < 25;i++) {
-    children.push(<File isdarkThemeActive={darkThemeActive}/>);
+  // const newer= Files.filter(file => {
+  //   if (file.fileName.toLowerCase().includes(query.toLowerCase())) {
+  //     return file;
+  //   } 
+  //   return file
+  // })
+  for(let i = 0;i < filteredData.length;i++) {
+    children.push(<File public={filteredData
+      .slice()
+      .sort(function(a, b){return b.uploadTime - a.uploadTime})[i]} isdarkThemeActive={darkThemeActive}/>);
   }
 
   return (
@@ -50,7 +83,7 @@ function PublicFiles() {
         switchActiveTheme={switchActiveTheme}
       />
 
-      <SearchFiles isdarkThemeActive={darkThemeActive}/>
+      <SearchFiles setQuery={setQuery}  isdarkThemeActive={darkThemeActive}/>
       
       <div className="container mt-5">
       <div className="row">

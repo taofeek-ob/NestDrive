@@ -3,24 +3,8 @@ import "./css/Hero.css";
 import Picture from "../Picture/Picture";
 import Article from "../Article/Article";
 import Form from "../Form/Form";
-import  { useState, useContext, useEffect } from "react";
-import { ConnectContext } from "../../context/ConnectContext";
-import { Link } from "react-router-dom";
-
-
-
-
 
 export default function Hero(props) {
-   const { currentAccount, connectWallet } = useContext(ConnectContext);
-
-  const[ shortenedAddress, setShortenedAddress ] = useState("");
-
-  useEffect(()=>{
-    setShortenedAddress(`${currentAccount.toString().slice(0, 5)}...${currentAccount.toString().slice(currentAccount.length - 4)}`)  
-
-  }, []);
-
   return (
     <div
       className={
@@ -39,22 +23,12 @@ export default function Hero(props) {
             section="hero"
             headingType="heading"
             isdarkThemeActive={props.isdarkThemeActive}
-            heading="NestDrive, Your Decentralized Online Library.
-            Also note that files with innapropriate content will be flagged when noticed."
-           
+            heading="NestDrive, Your Decentralized Online Library"
             paragraph={[
               "Store your public and private books, audiobooks, articles on the blockchain. Access them wherever you need, share and collaborate with friends, family and co-workers.",
             ]}
           />
-          {!currentAccount ? (
-            <button className="button" onClick={connectWallet}>
-              Connect Wallet
-            </button>
-          ) : (
-            <span className="button">
-              Signed in as: <button className="butto" to="/dashboard">{shortenedAddress}</button>
-            </span>
-          )}
+          <button className="button">Get Started</button>
         </div>
       </article>
     </div>
