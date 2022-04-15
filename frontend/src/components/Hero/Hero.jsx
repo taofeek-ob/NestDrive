@@ -32,7 +32,7 @@ export default function Hero(props) {
               "Store your public and private books, audiobooks, articles on the blockchain. Access them wherever you need, share and collaborate with friends, family and co-workers. Note that files with inappropriate content will be flagged.",
             ]}
           />
-          <button className="button">Get Started</button>
+          <button className="button">Connect Wallet</button>
         </div>
       </article>
     </div>
