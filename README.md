@@ -167,13 +167,13 @@ $ npx hardhat compile
 > ### Deploy
 - To deploy the smartcontract:
 ```
-$ npx hardhat run scripts/deploy.js --network mumbai
+$ npx hardhat run scripts/deploy.js --network rinkeby
 ```
 #
 > ### Verify
 - To verify the smartcontract:
 ```
-$ npx hardhat verify 0x459eBd3d66cfBfC118e8a20c4F16Fc75B376253d --network mumbai
+$ npx hardhat verify 0x459eBd3d66cfBfC118e8a20c4F16Fc75B376253d --network rinkeby
 ```
 
 #
