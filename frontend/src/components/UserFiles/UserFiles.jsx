@@ -75,13 +75,11 @@ function UserFiles(props) {
       };
     }, []);
   return (
+  
     <div className="col-12 col-md-6">
       <div className={card}>
             <div className="row g-0">
-              <div className="col-md-4">
                 <img src={imageSrc} className="img-fluid rounded-start" alt="..."/>
-              </div>
-              <div className="col-md-8">
                 <div className="card-body">
                   <h5 className="card-title">{props.public.fileName}</h5>
                   <p className="card-text">{props.public.fileDescription}</p>
@@ -97,7 +95,6 @@ function UserFiles(props) {
                 
                 <span className="btn btn-small btn-info text-white" onClick={()=>makePublic(Number(props.public.fileId))}>make public</span>
               )}
-                </div>
               </div>
             </div>
         </div>

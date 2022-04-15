@@ -13,21 +13,20 @@ export default function Footer(props) {
       <div className="Footer">
         <div className="Footer-aboutText">
           <p className="aboutText">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua
+            Team Resilient, BlockGames.
           </p>
         </div>
         <div className="Footer-details">
           <p className="details-phone">
-            <img src="images/phone-icon.svg" alt="phone icon" /> +1-543-123-4567
+            <img src="images/phone-icon.svg" alt="phone icon" /> 08066447739
           </p>
           <p className="details-email">
             <img src="images/email-icon.svg" alt="email icon" />{" "}
-            example@fylo.com
+            info@nestdrive.com
           </p>
           <p className="details-location">
-            <img src="images/location-icon.svg" alt="location icon" /> example,
-            example
+            <img src="images/location-icon.svg" alt="location icon" /> Lagos,
+            Nigeria
           </p>
         </div>
         <div className="Footer-links">
@@ -35,7 +34,7 @@ export default function Footer(props) {
             About us
           </a>
           <a href="#" className="Footer-link-item">
-            Jobs
+            Team
           </a>
           <a href="#" className="Footer-link-item">
             Press

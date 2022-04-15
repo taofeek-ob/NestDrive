@@ -45,14 +45,13 @@ function AppRoutes(){
             <Route exact path="/file" element={ <FilePreview/> } />
             <Route exact path="/profile" element={ <Profile/> } />
             <Route exact path="/dashboard" element={ <Dashboard/> } />
-            <Route exact path="/dashboard-admins" element={ <Admins/> } />
+            <Route exact path="/dashboard-admins" element={ <AddAdmin/> } />
             <Route exact path="/dashboard-public-files" element={ <UserPublicFiles/> } />
             <Route exact path="/dashboard-private-files" element={ <UserPrivateFiles/> } />
             <Route exact path="/dashboard-reported-files" element={ <ReportedFiles/> } />
             <Route exact path="/dashboard-reported-files" element={ <ReportedFiles/> } />
             <Route exact path="/dashboardreported-users" element={ <ReportedUsers/> } />
             <Route exact path="/dashboard-blacklisted-users" element={ <BlackListedUsers/>}/>
-            <Route exact path="/dashboard-add-admin" element={ <AddAdmin/>}/>
             <Route exact path="/dashboard-add-files" element={ <AddFiles/>}/>
             
           </Routes>
