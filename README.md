@@ -21,7 +21,7 @@
 - [Testing the Smartcontract](#testing-the-smartcontract)
   - [Coverage](#coverage)
   - [Test](#test)
-- [Verified Contract Addresses](#verified-contract-addresses)
+- [NestDrive Contract Address](#nestdrive-contract-address)
 - [Live Link](#live-link)
 - [Contributors](#contributors)
 - [Contributing to the project](#contributing-to-the-project)
@@ -125,9 +125,8 @@ $ npm install --save-dev "@nomiclabs/hardhat-waffle" "ethereum-waffle" "chai" "@
 - Once the app has been created, click on view key.
 - Copy the HTTP and place it in the .env file.
 
-
 <p align="center" width="100%">
-  <img src="https://drive.google.com/uc?export=view&id=1XFtACFN-LWvoDUD1QyJJY9uOc7KNkrL6" alt="alchemy"/>
+  <img src="https://drive.google.com/uc?export=view&id=1vPvT5LJRJy6B8hSi_3mPo16wC4u6MnEK" alt="alchemy"/>
 </p>
 
 #
@@ -140,6 +139,9 @@ $ npm install --save-dev "@nomiclabs/hardhat-waffle" "ethereum-waffle" "chai" "@
 <p align="center" width="100%">
   <img src="https://drive.google.com/uc?export=view&id=1Gq-hPuwjwb3TOCH2dqUA93VxfyrbUDN6" alt="etherscan key"/>
 </p>
+
+#
+
 
 #
 > ### Setup Hardhat.config
@@ -173,9 +175,7 @@ $ npx hardhat run scripts/deploy.js --network mumbai
 ```
 $ npx hardhat verify 0x459eBd3d66cfBfC118e8a20c4F16Fc75B376253d --network mumbai
 ```
-**`*Note:`**
 
-...................
 #
 > ## Setup the Frontend
 - First run the frontend on your local server to ensure it's fully functional before building for production.
@@ -235,21 +235,20 @@ $ npx hardhat node
 ```
 $ npx hardhat test --network localhost
 ``` 
+
 <p align="center" width="100%">
-  <img src="https://drive.google.com/uc?export=view&id=11oFAb-CTUmytFSc458kWkenBOe038kqU" alt="coverage tests"/>
+  <img src="https://drive.google.com/uc?export=view&id=1tMhIUrDVPcIsMxTd4FAzapB04_R93Rcc" alt="coverage tests"/>
 </p>
 
 #
-> ## Verified Contract Addresses
+> ## NestDrive Contract Address
 
-- The NestDrive Contract Address
-
-https://mumbai.polygonscan.com/address/0x459eBd3d66cfBfC118e8a20c4F16Fc75B376253d#code
+- https://rinkeby.etherscan.io/address/0x4dfBB942B4147596A03e1A76EFD72f12a0046FaA#code
 
 #  
 > ## Live Link
   
-  - ........................
+  - nestdrive.surge.sh
 #
 
 > ## Contributors
