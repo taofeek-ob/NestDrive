@@ -21,7 +21,7 @@
 - [Testing the Smartcontract](#testing-the-smartcontract)
   - [Coverage](#coverage)
   - [Test](#test)
-- [Verified Contract Addresses](#verified-contract-addresses)
+- [NestDrive Contract Address](#nestdrive-contract-address)
 - [Live Link](#live-link)
 - [Contributors](#contributors)
 - [Contributing to the project](#contributing-to-the-project)
@@ -61,13 +61,13 @@ These files could be articles, books or similar. The default permission for uplo
 > ## Repo Setup
 
 <p align="justify">
-To setup the repo, first fork the TeamResilient Nestcoin repo, then clone the forked repository to create a copy on the local machine.
+To setup the repo, first fork the TeamResilient NestDrive repo, then clone the forked repository to create a copy on the local machine.
 </p>
 
     $ git clone https://github.com/pauline-banye/NestDrive.git
 
 <p align="justify">
-Change directory to the cloned repo and set the original Nestcoin repository as the "upstream" and your forked repository as the "origin" using gitbash.
+Change directory to the cloned repo and set the original NestDrive repository as the "upstream" and your forked repository as the "origin" using gitbash.
 </p>
 
     $ git remote add upstream https://github.com/TeamResilient/NestDrive.git
@@ -94,7 +94,7 @@ The steps involved are outlined below:-
 > ### Install Hardhat
 The first step involves cloning and installing hardhat.
 ```shell
-$ cd Nestcoin
+$ cd NestDrive
 
 $ npm i -D hardhat
 
@@ -125,9 +125,8 @@ $ npm install --save-dev "@nomiclabs/hardhat-waffle" "ethereum-waffle" "chai" "@
 - Once the app has been created, click on view key.
 - Copy the HTTP and place it in the .env file.
 
-
 <p align="center" width="100%">
-  <img src="https://drive.google.com/uc?export=view&id=1XFtACFN-LWvoDUD1QyJJY9uOc7KNkrL6" alt="alchemy"/>
+  <img src="https://drive.google.com/uc?export=view&id=1vPvT5LJRJy6B8hSi_3mPo16wC4u6MnEK" alt="alchemy"/>
 </p>
 
 #
@@ -140,6 +139,9 @@ $ npm install --save-dev "@nomiclabs/hardhat-waffle" "ethereum-waffle" "chai" "@
 <p align="center" width="100%">
   <img src="https://drive.google.com/uc?export=view&id=1Gq-hPuwjwb3TOCH2dqUA93VxfyrbUDN6" alt="etherscan key"/>
 </p>
+
+#
+
 
 #
 > ### Setup Hardhat.config
@@ -171,11 +173,9 @@ $ npx hardhat run scripts/deploy.js --network rinkeby
 > ### Verify
 - To verify the smartcontract:
 ```
-$ npx hardhat verify ...............
+$ npx hardhat verify 0x459eBd3d66cfBfC118e8a20c4F16Fc75B376253d --network rinkeby
 ```
-**`*Note:`**
 
-...................
 #
 > ## Setup the Frontend
 - First run the frontend on your local server to ensure it's fully functional before building for production.
@@ -235,22 +235,20 @@ $ npx hardhat node
 ```
 $ npx hardhat test --network localhost
 ``` 
+
+<p align="center" width="100%">
+  <img src="https://drive.google.com/uc?export=view&id=1tMhIUrDVPcIsMxTd4FAzapB04_R93Rcc" alt="coverage tests"/>
+</p>
+
 #
-> ## Verified Contract Addresses
+> ## NestDrive Contract Address
 
-- The NestDrop Contract Address 
-
-  ................
-
-
-- The NestCoin Contract Address
-
-  .....................
+- https://rinkeby.etherscan.io/address/0x4dfBB942B4147596A03e1A76EFD72f12a0046FaA#code
 
 #  
 > ## Live Link
   
-  - ........................
+  - nestdrive.surge.sh
 #
 
 > ## Contributors
