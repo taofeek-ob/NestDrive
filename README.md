@@ -216,7 +216,7 @@ $ npm run build
 
 - Install Ganache
 ``` 
-  $ npm i install ganache-cli
+  $ npm i ganache-cli
 ``` 
 - Run coverage
 ```

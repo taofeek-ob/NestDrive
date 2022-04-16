@@ -3,7 +3,6 @@ const { ethers } = require("hardhat");
 
 let contract;
 
-
 describe("NestDrive", function(){
     it("should deploy the NestDrive contract to the testnet", async function(){
         //Get Contract from Contract Factory
@@ -24,9 +23,6 @@ describe("NestDrive", function(){
       });
 });
 
-
-
-
 describe("Upload Files", function(){
     it("should be able to upload a public file to the contract", async function(){
         const [ owner, secondAccount, thirdAccount] = await ethers.getSigners();
@@ -45,9 +41,6 @@ describe("Upload Files", function(){
 
     });
 
-    
-
-     
     it("should  be able to upload a private file to contract since length of type is 0", async function(){
         const [ owner, secondAccount, thirdAccount] = await ethers.getSigners();
          //Upload File 
@@ -114,7 +107,6 @@ describe("Upload Files", function(){
             "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.",
             true
         )).to.be.reverted;
-        
     })
 
     it("should not be able to upload a file to contract since length of type is 0", async function(){
@@ -127,7 +119,6 @@ describe("Upload Files", function(){
             "",
             true
         )).to.be.reverted;
-        
     })
 
     it("should not be able to upload a file to contract since length of type is 0", async function(){
@@ -140,7 +131,6 @@ describe("Upload Files", function(){
             "",
             true
         )).to.be.reverted;
-        
     })
 
     it("should not be able to upload a file if contract is paused", async function(){
@@ -170,7 +160,6 @@ describe("Upload Files", function(){
         )).to.be.revertedWith("Address is currently Blacklisted..");
     })
 })
-
 
 describe("Fetch Public Files", function(){
     it("Should be able to fetch public files", async function(){
@@ -203,6 +192,7 @@ describe("Fetch Public Files", function(){
         const fetchPublicFiles = await contract.connect(secondAccount).fetchPublicFiles();
         expect(fetchPublicFiles.length).to.be.equal(5);
     });
+
     it("Can't get public files when contract is Paused", async function(){
         const [ owner, secondAccount, thirdAccount] = await ethers.getSigners();
         await contract.connect(owner).uploadFile(
@@ -232,6 +222,7 @@ describe("Fetch Public Files", function(){
         await contract.connect(owner).pause();
         await expect(contract.connect(secondAccount).fetchPublicFiles()).to.be.reverted;
     });
+
     it("Blacklisted address should not get public files", async function(){
         const [ owner, secondAccount, thirdAccount] = await ethers.getSigners();
         await contract.connect(owner).unpause();
@@ -295,6 +286,7 @@ describe("Fetch User Files", function(){
         const fetchUserFiles = await contract.connect(secondAccount).fetchUserFiles();
         expect(fetchUserFiles.length).to.be.equal(4);
     });
+
     it("Can't get public files when contract is Paused", async function(){
         const [ owner, secondAccount, thirdAccount] = await ethers.getSigners();
         await contract.connect(owner).uploadFile(
@@ -324,6 +316,7 @@ describe("Fetch User Files", function(){
         await contract.connect(owner).pause();
         await expect(contract.connect(secondAccount).fetchUserFiles()).to.be.reverted;
     });
+
     it("Blacklisted address should not get public files", async function(){
         const [ owner, secondAccount, thirdAccount] = await ethers.getSigners();
         await contract.connect(owner).unpause();
@@ -419,8 +412,6 @@ describe("Pause Contract", function(){
         await contract.connect(owner).unpause();
         await expect(contract.connect(secondAccount).pause()).to.be.revertedWith("Only Moderators Have Access!");
     })
-
-    
 })
 
 describe("UnPause Contract", function(){
@@ -455,8 +446,6 @@ describe("BlackList Address", function(){
         const [ owner, secondAccount, thirdAccount, fourthAccount] = await ethers.getSigners();
         await expect(contract.connect(thirdAccount).addToBlackList(fourthAccount.address)).to.be.revertedWith("Only Moderators Have Access!");
     })
-
-    
 })
 
 describe("Remove Address from Blacklist. Get Blacklist", function(){
@@ -477,18 +466,8 @@ describe("Remove Address from Blacklist. Get Blacklist", function(){
         const [ owner, secondAccount, thirdAccount] = await ethers.getSigners();
         const blacklistArray = await contract.connect(owner).blackListArray();
         expect(blacklistArray.length).to.be.equal(2);
-    })
-
-    
+    })    
 })
-
-
-
-
-
-
-
-
 
 describe("Moderator Assigning and Removal, Check Moderator", function(){
     it("Should be able to assign moderator if moderator", async function(){
@@ -508,8 +487,6 @@ describe("Moderator Assigning and Removal, Check Moderator", function(){
         await contract.connect(owner).pause();
         await expect(contract.connect(thirdAccount).assignMod(fourthAccount.address)).to.be.reverted;
     })
-
-
 
     it("Should be able to remove moderator if moderator", async function(){
         const [ owner, secondAccount, thirdAccount] = await ethers.getSigners();
@@ -543,7 +520,6 @@ describe("Moderator Assigning and Removal, Check Moderator", function(){
         await contract.connect(owner).pause();
         await expect(contract.connect(owner).checkMod(fourthAccount.address)).to.be.reverted;
     })
-
 })
 
 describe("Report and Clear Reported Files", function(){
@@ -575,10 +551,6 @@ describe("Report and Clear Reported Files", function(){
         expect(reportedFiles.length).to.be.equal(1);
     })
 
-
-
-    
-
 })
 
 describe("Admin Taking Action on User", function(){
@@ -595,10 +567,7 @@ describe("Admin Taking Action on User", function(){
         const [ owner, secondAccount, thirdAccount, fifthAccount] = await ethers.getSigners();
         await expect(contract.connect(fifthAccount).makeReportedPrivate(6)).to.be.reverted;
     })
-        
-    
 })
-
 
 //$$####################################################################
 
@@ -611,7 +580,6 @@ describe("NestDrive Deploy", function(){
         const deployedNestDriveContract = await NestDriveContract.deploy();
         fileDrive = await deployedNestDriveContract.deployed();
         console.log("\n 🏵 NestDrive Contract Address:", deployedNestDriveContract.address);
-
     })
 });
 
@@ -628,7 +596,6 @@ describe("Moderators() and file Restriction (blacklist,access controls)", functi
         expect(txResult2.status).to.equal(1);
         console.log("Revert if address is not a Moderator");
         await expect(fileDrive.connect(secondAccount).removeMod(thirdAccount.address)).to.be.revertedWith("Only Moderators Have Access!");
-    
     })
 
     it("Should be able to add and remove addresses from blacklist",async function(){
@@ -648,8 +615,8 @@ describe("Moderators() and file Restriction (blacklist,access controls)", functi
         expect(txResult2.status).to.equal(1);
         console.log("Revert if address trying to remove address from blacklist is not a Moderator");
         await expect(fileDrive.connect(secondAccount).removeMod(thirdAccount.address)).to.be.revertedWith("Only Moderators Have Access!");
-    
     })
+
     it("Should be able to retrive file arrays of blacklist",async function(){
         const [ owner, secondAccount, thirdAccount] = await ethers.getSigners();
         console.log('\t'," Getting blacklisted address by moderator");
@@ -663,7 +630,6 @@ describe("Moderators() and file Restriction (blacklist,access controls)", functi
          await expect(fileDrive.connect(secondAccount).blackListArray()).to.be.revertedWith("Only Moderators Have Access!");
         
         console.log('\t',"Passed...");
-       
     })
     
     it("Should be able to retrive file arrays of reported files",async function(){
@@ -678,8 +644,8 @@ describe("Moderators() and file Restriction (blacklist,access controls)", functi
          await expect(fileDrive.connect(secondAccount).reportedListArray()).to.be.revertedWith("Only Moderators Have Access!");
         
         console.log('\t',"Passed...");
-       
     })
+
     it("Should be able to retrive moderators addresses",async function(){
         ///@dev Should not be able to view blacklisted if not a moderator
         const [ owner, secondAccount, thirdAccount] = await ethers.getSigners();
@@ -688,9 +654,7 @@ describe("Moderators() and file Restriction (blacklist,access controls)", functi
         console.log("this is checkmod",checkMod)
         expect(checkMod).to.equal(false);
         console.log('\t',"Passed...");
-       
     })
-    
 });
 
 describe("UploadFile , Change file Visibility (Public and Private)...",function(){
@@ -713,9 +677,9 @@ describe("UploadFile , Change file Visibility (Public and Private)...",function(
         expect(getfile[0].fileType).to.equal("JPG");
         expect(getfile[0].fileName).to.equal("FatherChristmas");
         expect(getfile[0].fileDescription).to.equal("Picture of Santa distributing gifts :-)");
-        expect(getfile[0].isPublic).to.equal(true);
-        
+        expect(getfile[0].isPublic).to.equal(true);  
     })
+
     it("Should not be able to upload files if length arguments(fileHash) is absent",async function(){
         const [ owner, secondAccount, thirdAccount] = await ethers.getSigners();
         console.log('\t',secondAccount.address ," Uploading new file...");
@@ -728,6 +692,7 @@ describe("UploadFile , Change file Visibility (Public and Private)...",function(
             true)).to.be.reverted;
         console.log('\t',"Reversal confirmed!...")
     })
+    
     it("Should not be able to upload files if length arguments(fileSize) is absent",async function(){
         const [ owner, secondAccount, thirdAccount] = await ethers.getSigners();
         console.log('\t',secondAccount.address ," Uploading new file...");
@@ -740,6 +705,7 @@ describe("UploadFile , Change file Visibility (Public and Private)...",function(
             true)).to.be.reverted;
         console.log('\t',"Reversal confirmed!...")
     })
+    
     it("Should not be able to upload files if length arguments(fileType) is absent",async function(){
         const [ owner, secondAccount, thirdAccount] = await ethers.getSigners();
         console.log('\t',secondAccount.address ," Uploading new file...");
@@ -752,6 +718,7 @@ describe("UploadFile , Change file Visibility (Public and Private)...",function(
             true)).to.be.reverted;
         console.log('\t',"Reversal confirmed!...")
     })
+    
     it("Should not be able to upload files if length arguments(fileName) is absent",async function(){
         const [ owner, secondAccount, thirdAccount] = await ethers.getSigners();
         console.log('\t',secondAccount.address ," Uploading new file...");
@@ -764,6 +731,7 @@ describe("UploadFile , Change file Visibility (Public and Private)...",function(
             true)).to.be.reverted;
         console.log('\t',"Reversal confirmed!...")
     })
+    
     it("Should not be able to upload files if length arguments(fileDescription) is absent",async function(){
         const [ owner, secondAccount, thirdAccount] = await ethers.getSigners();
         console.log('\t',secondAccount.address ," Uploading new file...");
@@ -776,6 +744,7 @@ describe("UploadFile , Change file Visibility (Public and Private)...",function(
             true)).to.be.reverted;
         console.log('\t',"Reversal confirmed!...")
     })
+    
     it("Should not be able to upload files if length arguments(address of the caller is none zero) ",async function(){
         const [ owner, secondAccount] = await ethers.getSigners();
         console.log('\t',secondAccount.address ," Uploading new file...");
@@ -805,6 +774,7 @@ describe("UploadFile , Change file Visibility (Public and Private)...",function(
         await expect(fileDrive.connect(secondAccount).makeFilePrivate(2)).to.be.revertedWith("you can only manipulate your own file");
     
     })
+    
     it("Should be able to make file public",async function(){
         const [ owner, secondAccount, thirdAccount] = await ethers.getSigners();
         console.log('\t',secondAccount.address ," Uploading new file...");
@@ -820,8 +790,10 @@ describe("UploadFile , Change file Visibility (Public and Private)...",function(
         getfile = await fileDrive.connect(secondAccount).fetchPublicFiles();
         console.log('\t',secondAccount.address ,"Successfully fetched files ...");
         //validate visibility status is private
+
         console.log('\t',"Current visiblity is False! ... (isPublic === false)")
         expect(getfile[0].isPublic).to.equal(false);
+
         //make file public
         console.log('\t',secondAccount.address ," Making file Public ...");
         makeFilePublic = await fileDrive.connect(secondAccount).makeFilePublic(2);
@@ -863,8 +835,8 @@ describe("Files Handling (fetch files, report files )",function(){
             "Romeo & Juliet",
             "Romance (Brief story of @wande and @Pauline) :-)",
             true);
-
     })
+
     it("Should fetch public and user files (all files published by a user), Report file and clear reported files.",async function(){
         const [ owner, secondAccount,thirdAccount,fourthAccount] = await ethers.getSigners();
 
@@ -884,6 +856,7 @@ describe("Files Handling (fetch files, report files )",function(){
         expect(fetchUserFiles1.length).to.greaterThanOrEqual(1);
         console.log('\t',"Validating  files uploaded by address... ",thirdAccount.address );
         expect(fetchUserFiles1[0].fileHash).to.equal("QmWm6MYSvkuWWjoDu62Ma9agyDPw7dyWw72WFbYNdStxQK2");
+
         //should return length of 0 if user address has not uploaded a file
         console.log('\t',fourthAccount.address ,"Attempting to fetch another user(s) private files... ");
         fetchPublicFiles2 = await fileDrive.connect(fourthAccount).fetchUserFiles();
@@ -914,7 +887,6 @@ describe("Files Handling (fetch files, report files )",function(){
         
         console.log('\t',"Passed..!");
 
-
         ///@dev only moderators can flag a file 
         console.log('\t',"Attempting to make file private! from an account not a moderator...");
         await expect( fileDrive.connect(secondAccount).makeReportedPrivate(2)).to.be.revertedWith("only admin can call this");
@@ -926,6 +898,7 @@ describe("Files Handling (fetch files, report files )",function(){
         console.log('\t',"passed...");
         
         console.log('\t',"Validated status of flagged file .... SUCCESS!");
+
         ///@dev clear report files
         console.log('\t',"Validate that only moderators can clear file reports....")
         await expect(fileDrive.connect(secondAccount).clearReportedFiles(2)).to.be.revertedWith("Only Moderators Have Access!");
@@ -937,17 +910,22 @@ describe("Files Handling (fetch files, report files )",function(){
         console.log('\t',"Files were successfully removed...");
     })
 })
+
 describe("Pause and Unpause contract test",function(){
+
     ///@dev When contract is paused
     beforeEach("Pause Contract", async function(){
         const [ owner, secondAccount] = await ethers.getSigners();
+
         //pause contract
         console.log('\t'," Pausing Contract...");
         pause =await fileDrive.connect(owner).pause();
     })
     count=0;
+
     it("Should not be able to upload files ", async function(){
         const [ owner, secondAccount] = await ethers.getSigners();
+
         //upload different files
         console.log('\t',"Attempting to Upload new file when paused...");
         await expect(fileDrive.connect(secondAccount).uploadFile("QmWm6MYSvkuWWjoDu62Ma9agyDPw7dyWw72WFbYNdStxQK1",
@@ -964,8 +942,10 @@ describe("Pause and Unpause contract test",function(){
         const txResult = await unpause.wait();
         expect(txResult.status).to.equal(1);
     })
+
     it("Should not be able to make file private ", async function(){
         const [ owner, secondAccount] = await ethers.getSigners();
+
         //making files private
         console.log('\t'," Attempting to make file private when contract is paused...");
         await expect(fileDrive.connect(secondAccount).makeFilePrivate(1)).to.be.reverted;
@@ -974,9 +954,9 @@ describe("Pause and Unpause contract test",function(){
         
         unpause = await fileDrive.connect(owner).unpause();
         const txResult = await unpause.wait();
-        expect(txResult.status).to.equal(1);
-        
+        expect(txResult.status).to.equal(1);  
     })
+
     it("Should not be able to make file public ", async function(){
         const [ owner, secondAccount] = await ethers.getSigners();
         //making files public
@@ -989,6 +969,7 @@ describe("Pause and Unpause contract test",function(){
         const txResult = await unpause.wait();
         expect(txResult.status).to.equal(1);
     })
+
     it("Should not be able to fetch public files", async function(){
         const [ owner, secondAccount] = await ethers.getSigners();
         //fetching public files
@@ -1001,6 +982,7 @@ describe("Pause and Unpause contract test",function(){
         const txResult = await unpause.wait();
         expect(txResult.status).to.equal(1);
     })
+
     it("Should not be able to fetch user files ", async function(){
         const [ owner, secondAccount] = await ethers.getSigners();
         //fetching user files
@@ -1013,6 +995,7 @@ describe("Pause and Unpause contract test",function(){
         const txResult = await unpause.wait();
         expect(txResult.status).to.equal(1);
     })
+
     it("Should not be able to add to blacklist", async function(){
         const [ owner, secondAccount] = await ethers.getSigners();
         //adding files to blacklist
@@ -1025,6 +1008,7 @@ describe("Pause and Unpause contract test",function(){
         const txResult = await unpause.wait();
         expect(txResult.status).to.equal(1);
     })
+
     it("Should not be able to remove from blacklist", async function(){
         const [ owner, secondAccount] = await ethers.getSigners();
         //removing files from blacklist
@@ -1037,6 +1021,7 @@ describe("Pause and Unpause contract test",function(){
         const txResult = await unpause.wait();
         expect(txResult.status).to.equal(1);
     })
+
     it("Should not be able to add moderators", async function(){
         const [ owner, secondAccount] = await ethers.getSigners();
         //assigning address to moderators list
@@ -1049,6 +1034,7 @@ describe("Pause and Unpause contract test",function(){
         const txResult = await unpause.wait();
         expect(txResult.status).to.equal(1);
     })
+
     it("Should not be able to remove moderators", async function(){
         const [ owner, secondAccount] = await ethers.getSigners();
         //removing address from moderators list
@@ -1061,6 +1047,7 @@ describe("Pause and Unpause contract test",function(){
         const txResult = await unpause.wait();
         expect(txResult.status).to.equal(1);
     })
+    
     it("Should not be able to make reported files private", async function(){
         const [ owner, secondAccount] = await ethers.getSigners();
         //making reported file private by admin
