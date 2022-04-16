@@ -3,8 +3,7 @@ const { ethers } = require("hardhat");
 
 let contract;
 
-
-describe("NestCoin", function(){
+describe("NestDrive", function(){
     it("should deploy the NestDrive contract to the testnet", async function(){
         //Get Contract from Contract Factory
         const NestdriveContract = await ethers.getContractFactory("NestDrive");
@@ -24,9 +23,6 @@ describe("NestCoin", function(){
       });
 });
 
-
-
-
 describe("Upload Files", function(){
     it("should be able to upload a public file to the contract", async function(){
         const [ owner, secondAccount, thirdAccount] = await ethers.getSigners();
@@ -44,9 +40,6 @@ describe("Upload Files", function(){
         expect(txResult.status).to.equal(1);
 
     });
-
-    
-
      
     it("should  be able to upload a private file to contract since length of type is 0", async function(){
         const [ owner, secondAccount, thirdAccount] = await ethers.getSigners();
@@ -61,8 +54,7 @@ describe("Upload Files", function(){
         );
         // Expect the function to go through
         const txResult = await uploadFile.wait();
-        expect(txResult.status).to.equal(1);
-        
+        expect(txResult.status).to.equal(1);    
     })
 
     it("should not be able to upload a file to contract since length of hash is 0", async function(){
@@ -75,9 +67,9 @@ describe("Upload Files", function(){
             "My Picture",
             "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.",
             true
-        )).to.be.reverted;
-        
+        )).to.be.reverted;        
     })
+
     it("should not be able to upload a file to contract since length of type is 0", async function(){
         const [ owner, secondAccount, thirdAccount] = await ethers.getSigners();
         await expect(contract.connect(owner).uploadFile(
@@ -88,7 +80,6 @@ describe("Upload Files", function(){
             "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.",
             true
         )).to.be.reverted;
-        
     })
 
     it("should not be able to upload a file to contract since length of type is 0", async function(){
@@ -101,7 +92,6 @@ describe("Upload Files", function(){
             "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.",
             true
         )).to.be.reverted;
-        
     })
 
     it("should not be able to upload a file to contract since length of type is 0", async function(){
@@ -114,7 +104,6 @@ describe("Upload Files", function(){
             "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.",
             true
         )).to.be.reverted;
-        
     })
 
     it("should not be able to upload a file to contract since length of type is 0", async function(){
@@ -127,7 +116,6 @@ describe("Upload Files", function(){
             "",
             true
         )).to.be.reverted;
-        
     })
 
     it("should not be able to upload a file to contract since length of type is 0", async function(){
@@ -140,7 +128,6 @@ describe("Upload Files", function(){
             "",
             true
         )).to.be.reverted;
-        
     })
 
     it("should not be able to upload a file if contract is paused", async function(){
@@ -170,7 +157,6 @@ describe("Upload Files", function(){
         )).to.be.revertedWith("Address is currently Blacklisted..");
     })
 })
-
 
 describe("Fetch Public Files", function(){
     it("Should be able to fetch public files", async function(){
@@ -203,6 +189,7 @@ describe("Fetch Public Files", function(){
         const fetchPublicFiles = await contract.connect(secondAccount).fetchPublicFiles();
         expect(fetchPublicFiles.length).to.be.equal(5);
     });
+
     it("Can't get public files when contract is Paused", async function(){
         const [ owner, secondAccount, thirdAccount] = await ethers.getSigners();
         await contract.connect(owner).uploadFile(
@@ -232,6 +219,7 @@ describe("Fetch Public Files", function(){
         await contract.connect(owner).pause();
         await expect(contract.connect(secondAccount).fetchPublicFiles()).to.be.reverted;
     });
+    
     it("Blacklisted address should not get public files", async function(){
         const [ owner, secondAccount, thirdAccount] = await ethers.getSigners();
         await contract.connect(owner).unpause();
