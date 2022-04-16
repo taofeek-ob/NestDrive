@@ -27,7 +27,7 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
   defaultNetwork,
   networks: {
     localhost: {
-      url: "http://localhost:7545",
+      url: "http://localhost:8545",
       /*      
         notice no mnemonic here? it will just use account 0 of the hardhat node to deploy
         (you can put in a mnemonic here to set the deployer locally)
@@ -38,10 +38,7 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
       url: process.env.ALCHEMY_API_URL,
       accounts: [process.env.METAMASK_KEY],
     },
-<<<<<<< HEAD
    
-=======
->>>>>>> 51d87417c66d83bd9829286423035a9017088f6f
   },
   etherscan: {
     apiKey: process.env.ETHERSCAN_KEY,
