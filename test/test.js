@@ -1,7 +1,7 @@
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
 
-let contract;
+let contract, fileDrive;
 
 describe("NestDrive", function(){
     it("should deploy the NestDrive contract to the testnet", async function(){
@@ -317,7 +317,7 @@ describe("Fetch User Files", function(){
         await expect(contract.connect(secondAccount).fetchUserFiles()).to.be.reverted;
     });
 
-    it("Blacklisted address should not get public files", async function(){
+    it("Blacklisted address should not get user files", async function(){
         const [ owner, secondAccount, thirdAccount] = await ethers.getSigners();
         await contract.connect(owner).unpause();
         await contract.connect(owner).uploadFile(
@@ -432,7 +432,6 @@ describe("UnPause Contract", function(){
     })
 })
 
-
 describe("BlackList Address", function(){
     it("Should be able to blacklist address if moderator", async function(){
         const [ owner, secondAccount, thirdAccount] = await ethers.getSigners();
@@ -538,7 +537,6 @@ describe("Report and Clear Reported Files", function(){
         expect(clearreported.status).to.be.equal(1);
     })
 
-
     it("Should not be able to clear reported files if address is not a moderator", async function(){
         const [ owner, secondAccount, thirdAccount, fourthAccount] = await ethers.getSigners();
         await contract.connect(owner).report(5);
@@ -550,28 +548,24 @@ describe("Report and Clear Reported Files", function(){
         const reportedFiles = await contract.connect(owner).reportedListArray();
         expect(reportedFiles.length).to.be.equal(1);
     })
-
 })
 
 describe("Admin Taking Action on User", function(){
     it("Should be able make a users post private", async function(){
-
         const [ owner, secondAccount, thirdAccount] = await ethers.getSigners();
+        await contract.connect(secondAccount).report(6);
         const makeprivate = await contract.connect(owner).makeReportedPrivate(6);
         const makeprivated = await makeprivate.wait();
         expect(makeprivated.status).to.be.equal(1);
     })   
     
     it("Should not be able make a users post private if not admin", async function(){
-
         const [ owner, secondAccount, thirdAccount, fifthAccount] = await ethers.getSigners();
         await expect(contract.connect(fifthAccount).makeReportedPrivate(6)).to.be.reverted;
     })
 })
 
-//$$####################################################################
-
-let fileDrive;
+// #########################################################################
 
 describe("NestDrive Deploy", function(){
     it("should deploy the nestdrive contract to the testnet", async function(){
@@ -605,6 +599,7 @@ describe("Moderators() and file Restriction (blacklist,access controls)", functi
         const txResult = await addToBlackList.wait();
         console.log('\t',secondAccount.address ," is added to blacklist!");
         expect(txResult.status).to.equal(1);
+        
         //attempt to access nestdrive functions should revert
         console.log('\t',"Revert if address is Blacklisted...");
         await expect(fileDrive.connect(secondAccount).fetchPublicFiles()).to.be.revertedWith("Address is currently Blacklisted..");
@@ -762,9 +757,11 @@ describe("UploadFile , Change file Visibility (Public and Private)...",function(
         const [ owner, secondAccount, thirdAccount] = await ethers.getSigners();
         getfile = await fileDrive.connect(secondAccount).fetchPublicFiles();
         console.log('\t',secondAccount.address ,"Successfully fetched files ...");
+
         //validate visibility status is public
         console.log('\t',"Current visiblity is True! ... (isPublic === true)")
         expect(getfile[0].isPublic).to.equal(true);
+
         //make file private
         console.log('\t',secondAccount.address ," Making file private ...");
         makeFilePrivate = await fileDrive.connect(secondAccount).makeFilePrivate(1);
@@ -772,7 +769,6 @@ describe("UploadFile , Change file Visibility (Public and Private)...",function(
         expect(txResult.status).to.equal(1);
         console.log("Revert if address is not the owner of the file");
         await expect(fileDrive.connect(secondAccount).makeFilePrivate(2)).to.be.revertedWith("you can only manipulate your own file");
-    
     })
     
     it("Should be able to make file public",async function(){
