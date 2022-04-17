@@ -230,9 +230,7 @@ contract NestDrive is Pausable {
         Allfiles[fileId].isPublic = false;
         uint index = indexOfreportedFiles[fileId];
 
-
         reportedFiles[index] = reportedFiles[reportedFiles.length-1];
-        
         
         reportedFiles.pop();
 
@@ -375,7 +373,6 @@ contract NestDrive is Pausable {
         /// @notice emit when a address is blacklisted
         emit addInBlackList(_addr);
         return true;
-
     }
 
     ///@dev function to remove an address from the blacklist

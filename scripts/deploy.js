@@ -20,10 +20,8 @@ async function main(){
     "\n 🏵 NESTDRIVE Contract Address:",
     deployedNestDriveContract.address
   );
-
-
-  
 }
+
 // Call the main function and catch if there is any error
 main()
   .then(() => process.exit(0))

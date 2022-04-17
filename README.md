@@ -19,8 +19,6 @@
   - [Start Server](#start-server)
   - [Build the Frontend](#build-the-frontend)
 - [Testing the Smartcontract](#testing-the-smartcontract)
-  - [Coverage](#coverage)
-  - [Test](#test)
 - [NestDrive Contract Address](#nestdrive-contract-address)
 - [Live Link](#live-link)
 - [Contributors](#contributors)
@@ -141,9 +139,6 @@ $ npm install --save-dev "@nomiclabs/hardhat-waffle" "ethereum-waffle" "chai" "@
 </p>
 
 #
-
-
-#
 > ### Setup Hardhat.config
 
 
@@ -207,8 +202,10 @@ $ npm run build
 
 - Coverage is used to view the percentage of the code required by tests and unittests were implemented to ensure that the code functions as expected
 #
-> ### Coverage
-- Install Solidity Coverage
+**`Coverage Test`**
+- To test the smartcontract, first open a terminal and run the following command:
+
+- First install Solidity Coverage
 ```
   $ npm i solidity-coverage
 ```
@@ -216,25 +213,16 @@ $ npm run build
 
 - Install Ganache
 ``` 
-  $ npm i install ganache-cli
+  $ npm i ganache-cli
 ``` 
 - Run coverage
 ```
 $ npx hardhat coverage --network localhost
+
+# if you get errors and you want to trace the error in the terminal
+$ npx hardhat coverage --network localhost --show-stack-traces
 ```
 #
-> ### Test
-
-- To test the smartcontract, first open a terminal and run the following command:
-
-``` 
-$ npx hardhat node
-```
-- Leave the previous terminal running and open new terminal. 
-- Run the command below:
-```
-$ npx hardhat test --network localhost
-``` 
 
 <p align="center" width="100%">
   <img src="https://drive.google.com/uc?export=view&id=1tMhIUrDVPcIsMxTd4FAzapB04_R93Rcc" alt="coverage tests"/>
