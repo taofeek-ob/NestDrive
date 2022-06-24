@@ -1,7 +1,7 @@
 require("@nomiclabs/hardhat-waffle");
 require("@nomiclabs/hardhat-etherscan");
-const dotenv = require("dotenv");
 require('solidity-coverage');
+const dotenv = require("dotenv");
 
 dotenv.config();
 const defaultNetwork = "rinkeby";
@@ -31,7 +31,6 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
       /*      
         notice no mnemonic here? it will just use account 0 of the hardhat node to deploy
         (you can put in a mnemonic here to set the deployer locally)
-      
       */
     },
     rinkeby: {
@@ -42,6 +41,7 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
   etherscan: {
     apiKey: process.env.ETHERSCAN_KEY,
   },
+  plugins:["solidity-coverage"]
 };
 
 
